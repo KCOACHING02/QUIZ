@@ -18,6 +18,7 @@
             --success-color: #4CAF50;
             --error-color: #F44336;
             --warning-color: #FFC107;
+            --info-color: #17a2b8; /* Nouvelle couleur pour l'info */
         }
 
         body {
@@ -63,6 +64,7 @@
             font-size: 1.1em;
             color: #666;
             margin-bottom: 30px;
+            /* display: none; */ /* Garder pour référence si on veut cacher */
         }
 
         /* Styles pour les sections de quiz (questions) */
@@ -119,7 +121,7 @@
         }
 
 
-        /* Boutons de navigation */
+        /* Boutons de navigation (seulement Précédent et Soumettre resteront visibles) */
         .navigation-buttons {
             display: flex;
             justify-content: space-between;
@@ -177,6 +179,23 @@
         #diagnosticText {
             margin-bottom: 20px;
         }
+        .recap-question {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border-left: 5px solid var(--info-color);
+            border-radius: 5px;
+        }
+        .recap-question p {
+            margin: 0;
+            font-weight: normal;
+        }
+        .recap-question .score-evaluation {
+            font-size: 0.9em;
+            color: #777;
+            margin-top: 5px;
+        }
+
         #downloadSection {
             margin-top: 30px;
             padding: 25px;
@@ -210,8 +229,6 @@
 <body>
     <div class="container">
         <h1>QUIZ : Est-ce que ton alimentation bloque ta perte de poids (sans que tu t’en rendes compte) ?</h1>
-        <p class="intro-text">Réponds aux 10 questions suivantes pour recevoir ton diagnostic personnalisé (et débloquer ta perte de poids avec un plan offert à la fin).</p>
-
         <form id="quizForm">
             <div class="quiz-section active" data-question-id="1">
                 <p>1. Sautes-tu un repas dans la journée ?</p>
@@ -297,34 +314,131 @@
 
             <div class="navigation-buttons">
                 <button type="button" id="prevQuestionBtn" style="display: none;">Précédent</button>
-                <button type="button" id="nextQuestionBtn">Suivant</button>
                 <button type="button" id="submitQuizBtn" style="display: none;">Obtenir mon diagnostic</button>
             </div>
         </form>
 
         <div id="resultatQuiz">
-            <h2>Ton diagnostic personnalisé :</h2>
-            <p id="diagnosticText"></p>
-        </div>
+            <h2>Ton bilan personnalisé :</h2>
+            <p id="diagnosticIntro"></p> <div id="recapitulatifReponses">
+                <h3>Récapitulatif de tes réponses :</h3>
+                </div>
+            <p id="diagnosticText"></p> </div>
 
         <div id="downloadSection">
-            <h2>Tu veux débloquer ta perte de poids avec un plan simple et efficace ?</h2>
-            <p>→ Reçois 1 journée de menus personnalisés + ton diagnostic complet.</p>
-            <button id="downloadPdfBtn">Clique ici pour le recevoir</button>
+            <h2>Télécharge maintenant ta liste de courses indispensable pour une perte de poids !</h2>
+            <button id="downloadPdfBtn">Obtenir ma liste de courses</button>
         </div>
     </div>
 
     <script>
         const quizSections = document.querySelectorAll('.quiz-section');
         const prevBtn = document.getElementById('prevQuestionBtn');
-        const nextBtn = document.getElementById('nextQuestionBtn');
         const submitBtn = document.getElementById('submitQuizBtn');
         const errorMessage = document.getElementById('errorMessage');
         const resultatQuizDiv = document.getElementById('resultatQuiz');
+        const diagnosticIntroElement = document.getElementById('diagnosticIntro');
+        const recapitulatifReponsesDiv = document.getElementById('recapitulatifReponses');
+        const diagnosticTextElement = document.getElementById('diagnosticText');
         const downloadSectionDiv = document.getElementById('downloadSection');
 
         let currentQuestionIndex = 0;
         const totalQuestions = quizSections.length;
+        const userAnswers = {}; // Pour stocker les réponses de l'utilisateur
+
+        // Définitions des questions et de leurs réponses avec des scores et commentaires
+        const questionsData = {
+            q1: {
+                text: "Sautes-tu un repas dans la journée ?",
+                options: {
+                    A: { label: "Oui, souvent le petit-déj", score: 3, comment: "Sauter le petit-déjeuner peut perturber ton métabolisme." },
+                    B: { label: "Oui, souvent le déjeuner (midi)", score: 3, comment: "Passer le déjeuner peut mener à des grignotages excessifs plus tard." },
+                    C: { label: "Non, je mange 3 repas par jour", score: 0, comment: "C'est une excellente habitude pour maintenir ton énergie et réguler l'appétit." },
+                    D: { label: "Je mange à des horaires irréguliers", score: 2, comment: "Des repas à heures fixes aident à réguler la faim et le système digestif." }
+                }
+            },
+            q2: {
+                text: "Le midi, tu manges plutôt :",
+                options: {
+                    A: { label: "Un plat tout prêt, ou sur le pouce", score: 3, comment: "Les plats préparés sont souvent riches en sel, sucre et mauvaises graisses." },
+                    B: { label: "Un vrai repas complet et équilibré", score: 0, comment: "Parfait ! Un repas équilibré au déjeuner est la clé d'une bonne énergie et satiété." },
+                    C: { label: "Une salade ou une soupe légère", score: 1, comment: "Bonne intention, mais assure-toi d'avoir assez de protéines et de fibres pour être rassasiée." },
+                    D: { label: "Je saute ce repas par manque de temps ou d’appétit", score: 3, comment: "Sauter un repas n'est pas idéal pour une perte de poids durable." }
+                }
+            },
+            q3: {
+                text: "Ton sommeil : tu dors en moyenne…",
+                options: {
+                    A: { label: "Moins de 5h par nuit", score: 4, comment: "Un manque de sommeil sévère peut sérieusement dérégler les hormones de la faim." },
+                    B: { label: "Entre 5h et 6h", score: 2, comment: "Un sommeil insuffisant peut augmenter les fringales et le stockage des graisses." },
+                    C: { label: "Entre 7h et 8h", score: 0, comment: "Idéal ! Un sommeil suffisant est fondamental pour la régulation du poids." },
+                    D: { label: "9h ou plus", score: 1, comment: "Trop de sommeil peut parfois aussi être lié à un métabolisme ralenti ou d'autres facteurs." }
+                }
+            },
+            q4: {
+                text: "Ton dîner, c’est souvent :",
+                options: {
+                    A: { label: "Un plat plaisir (raclette, pizza, burger maison…)", score: 3, comment: "Les dîners lourds peuvent perturber la digestion et le sommeil, impactant la perte de poids." },
+                    B: { label: "Un repas équilibré (protéines, légumes, un peu de féculents)", score: 0, comment: "Excellent choix ! Un dîner léger et équilibré favorise une bonne digestion nocturne." },
+                    C: { label: "Une soupe + yaourt ou fruit", score: 1, comment: "C'est léger, mais assure-toi d'avoir suffisamment de protéines pour la satiété." },
+                    D: { label: "Je mange devant la télé sans trop me rappeler quoi", score: 2, comment: "Manger en étant distrait mène souvent à manger plus et à moins apprécier le repas." }
+                }
+            },
+            q5: {
+                text: "Combien de fois par semaine manges-tu des pizzas, burgers ou fast-food ?",
+                options: {
+                    A: { label: "3 fois ou plus", score: 4, comment: "Ces aliments sont des bombes caloriques qui freinent significativement la perte de poids." },
+                    B: { label: "1 à 2 fois", score: 2, comment: "À consommer avec modération. Ces repas fréquents peuvent compromettre tes objectifs." },
+                    C: { label: "Rarement, une fois de temps en temps", score: 1, comment: "C'est une bonne approche pour se faire plaisir sans excès." },
+                    D: { label: "Jamais, j’évite complètement", score: 0, comment: "Très bien ! Les éviter est un atout majeur pour la perte de poids." }
+                }
+            },
+            q6: {
+                text: "Manges-tu souvent devant un écran ?",
+                options: {
+                    A: { label: "Toujours devant la télé", score: 3, comment: "La distraction réduit la conscience de la satiété et peut augmenter l'apport calorique." },
+                    B: { label: "Souvent devant mon téléphone", score: 3, comment: "Comme la télé, le téléphone distrait et nuit à l'écoute de tes signaux de faim." },
+                    C: { label: "Parfois, mais j’essaie de faire attention", score: 1, comment: "Un effort louable, mais la pleine conscience est essentielle pour mieux manger." },
+                    D: { label: "Non, je mange à table sans distraction", score: 0, comment: "Excellent ! Manger en pleine conscience est une habitude clé pour la perte de poids." }
+                }
+            },
+            q7: {
+                text: "Après tes repas, tu te sens :",
+                options: {
+                    A: { label: "Fatiguée ou ballonnée", score: 3, comment: "Ces sensations peuvent indiquer une mauvaise digestion ou des repas trop lourds/déséquilibrés." },
+                    B: { label: "Encore un peu affamée", score: 2, comment: "Cela suggère un manque de protéines, de fibres ou de volume dans tes repas." },
+                    C: { label: "Satisfaite et rassasiée", score: 0, comment: "Le sentiment idéal ! Tes repas te fournissent ce dont tu as besoin." },
+                    D: { label: "Prête à grignoter ou chercher un dessert", score: 2, comment: "Cela peut signaler un déséquilibre des macronutriments ou une habitude liée au sucre." }
+                }
+            },
+            q8: {
+                text: "Tes apports en protéines, tu dirais que…",
+                options: {
+                    A: { label: "J’en mange trop peu ou pas à chaque repas", score: 3, comment: "Les protéines sont cruciales pour la satiété et le maintien de la masse musculaire." },
+                    B: { label: "Je n’ai aucune idée de combien il m’en faut", score: 2, comment: "Comprendre tes besoins en protéines est un levier important pour la perte de poids." },
+                    C: { label: "Je fais attention à en avoir à chaque repas (25–30g midi/soir)", score: 0, comment: "Parfait ! Une bonne répartition des protéines est essentielle." },
+                    D: { label: "Je suis végé/végan mais sans suivi précis", score: 2, comment: "Il est crucial de bien planifier tes apports pour éviter les carences et rester rassasié.e." }
+                }
+            },
+            q9: {
+                text: "Dans tes repas principaux, il y a souvent des féculents ?",
+                options: {
+                    A: { label: "Dans les deux repas (pâtes, riz, pain…)", score: 2, comment: "Les féculents ne sont pas mauvais, mais en consommer trop et à tous les repas peut impacter la perte de poids." },
+                    B: { label: "Au moins une fois par jour", score: 1, comment: "Bon équilibre ! Les féculents fournissent de l'énergie, l'important est la quantité et le type." },
+                    C: { label: "Très peu, je privilégie légumes et protéines", score: 0, comment: "Excellente stratégie pour réduire l'apport calorique tout en étant rassasié.e." },
+                    D: { label: "Je ne fais pas attention", score: 2, comment: "La quantité et le type de féculents peuvent avoir un impact majeur sur ta glycémie et ta perte de poids." }
+                }
+            },
+            q10: {
+                text: "Combien de pas fais-tu en moyenne chaque jour ?",
+                options: {
+                    A: { label: "Moins de 5000", score: 3, comment: "Un faible niveau d'activité physique est un frein majeur à la dépense calorique et à la perte de poids." },
+                    B: { label: "Entre 5000 et 7000", score: 2, comment: "C'est un bon début, mais viser plus haut peut accélérer tes résultats." },
+                    C: { label: "Entre 7000 et 10 000", score: 1, comment: "Très bien ! C'est un bon niveau d'activité quotidienne." },
+                    D: { label: "Plus de 10 000", score: 0, comment: "Fantastique ! L'activité physique est un pilier essentiel de la perte de poids." }
+                }
+            }
+        };
 
         // Fonction pour afficher une question spécifique
         function showQuestion(index) {
@@ -337,27 +451,31 @@
 
             // Mettre à jour la visibilité des boutons
             prevBtn.style.display = index === 0 ? 'none' : 'block';
-            nextBtn.style.display = index === totalQuestions - 1 ? 'none' : 'block';
             submitBtn.style.display = index === totalQuestions - 1 ? 'block' : 'none';
 
             errorMessage.style.display = 'none'; // Cacher le message d'erreur à chaque changement de question
         }
 
-        // Gérer le bouton Suivant
-        nextBtn.addEventListener('click', () => {
-            const currentQuestionName = `q${currentQuestionIndex + 1}`;
-            const selectedOption = document.querySelector(`input[name="${currentQuestionName}"]:checked`);
+        // Écouteur d'événements pour toutes les options radio
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', (event) => {
+                const questionName = event.target.name;
+                const selectedValue = event.target.value;
+                userAnswers[questionName] = selectedValue; // Stocker la réponse
 
-            if (!selectedOption) {
-                errorMessage.textContent = "Veuillez sélectionner une réponse pour continuer.";
-                errorMessage.style.display = 'block';
-                return;
-            }
+                errorMessage.style.display = 'none'; // Cacher l'erreur dès qu'une sélection est faite
 
-            if (currentQuestionIndex < totalQuestions - 1) {
-                currentQuestionIndex++;
-                showQuestion(currentQuestionIndex);
-            }
+                // On avance à la question suivante après un court délai pour que l'utilisateur voie son choix stylisé
+                setTimeout(() => {
+                    if (currentQuestionIndex < totalQuestions - 1) {
+                        currentQuestionIndex++;
+                        showQuestion(currentQuestionIndex);
+                    } else {
+                        // Si c'est la dernière question, valider le quiz
+                        calculerDiagnostic();
+                    }
+                }, 400); // Délai de 400 millisecondes (0.4 seconde)
+            });
         });
 
         // Gérer le bouton Précédent
@@ -368,7 +486,7 @@
             }
         });
 
-        // Gérer le bouton de soumission du quiz
+        // Gérer le bouton de soumission du quiz (pour la dernière question, si on n'a pas encore répondu)
         submitBtn.addEventListener('click', () => {
             const currentQuestionName = `q${currentQuestionIndex + 1}`;
             const selectedOption = document.querySelector(`input[name="${currentQuestionName}"]:checked`);
@@ -378,75 +496,114 @@
                 errorMessage.style.display = 'block';
                 return;
             }
-
             calculerDiagnostic();
         });
 
-        // Fonction de calcul du diagnostic (presque la même que précédemment, avec quelques ajustements)
+        // Fonction de calcul du diagnostic
         function calculerDiagnostic() {
-            let score = 0;
-            const questions = 10;
-            const allRadios = document.querySelectorAll('input[type="radio"]');
+            let totalScore = 0;
+            let recapHTML = '';
+            let detailedComments = [];
 
-            allRadios.forEach(radio => {
-                if (radio.checked) {
-                    const questionNumber = parseInt(radio.name.replace('q', ''));
-                    const answerValue = radio.value;
+            for (let i = 1; i <= totalQuestions; i++) {
+                const questionName = `q${i}`;
+                const userAnswer = userAnswers[questionName];
 
-                    switch(questionNumber) {
-                        case 1: // Sautes-tu un repas
-                            if (answerValue === 'A' || answerValue === 'B' || answerValue === 'D') score += 2;
-                            break;
-                        case 2: // Midi
-                            if (answerValue === 'A' || answerValue === 'D') score += 3;
-                            if (answerValue === 'C') score += 1;
-                            break;
-                        case 3: // Sommeil
-                            if (answerValue === 'A' || answerValue === 'B') score += 3;
-                            if (answerValue === 'D') score += 1;
-                            break;
-                        case 4: // Dîner
-                            if (answerValue === 'A' || answerValue === 'D') score += 3;
-                            if (answerValue === 'C') score += 1;
-                            break;
-                        case 5: // Fast-food
-                            if (answerValue === 'A') score += 4;
-                            if (answerValue === 'B') score += 2;
-                            break;
-                        case 6: // Écran en mangeant
-                            if (answerValue === 'A' || answerValue === 'B') score += 3;
-                            if (answerValue === 'C') score += 1;
-                            break;
-                        case 7: // Après repas
-                            if (answerValue === 'A' || answerValue === 'B' || answerValue === 'D') score += 2;
-                            break;
-                        case 8: // Protéines
-                            if (answerValue === 'A' || answerValue === 'B' || answerValue === 'D') score += 2;
-                            break;
-                        case 9: // Féculents
-                            if (answerValue === 'A' || answerValue === 'D') score += 2;
-                            if (answerValue === 'B') score += 1;
-                            break;
-                        case 10: // Pas par jour
-                            if (answerValue === 'A' || answerValue === 'B') score += 2;
-                            break;
-                    }
+                if (!userAnswer) {
+                    // Cette partie ne devrait normalement plus être atteinte si la validation par étape fonctionne bien
+                    // Mais elle reste une sécurité.
+                    errorMessage.textContent = "Veuillez répondre à toutes les questions avant de valider.";
+                    errorMessage.style.display = 'block';
+                    return;
                 }
-            });
 
-            // Déterminer le diagnostic en fonction du score
-            let diagnosticText = "";
-            if (score <= 5) {
-                diagnosticText = "Félicitations ! Tes habitudes alimentaires sont plutôt bonnes et ne semblent pas être un frein majeur à ta perte de poids. Continue sur cette lancée !";
-            } else if (score <= 15) {
-                diagnosticText = "Tu es sur la bonne voie, mais il y a quelques ajustements à faire pour optimiser ta perte de poids. De petites modifications peuvent faire une grande différence !";
-            } else if (score <= 25) {
-                diagnosticText = "Ton alimentation présente plusieurs points qui pourraient freiner ta perte de poids. Ne t'inquiète pas, c'est le moment de mettre en place de nouvelles stratégies pour des résultats durables.";
-            } else {
-                diagnosticText = "Il semblerait que ton alimentation actuelle soit un obstacle significatif à ta perte de poids. Mais la bonne nouvelle, c'est que tu as identifié les points clés à améliorer. Un changement profond t'attend !";
+                const questionData = questionsData[questionName];
+                const optionData = questionData.options[userAnswer];
+                const score = optionData.score;
+                const comment = optionData.comment;
+
+                totalScore += score;
+                detailedComments.push(comment); // Collecte les commentaires pour le bilan
+
+                // Construction du HTML pour le récapitulatif
+                recapHTML += `
+                    <div class="recap-question">
+                        <p><strong>${i}. ${questionData.text}</strong></p>
+                        <p>Ta réponse : ${optionData.label}</p>
+                        <p class="score-evaluation">Points pour cette réponse : ${score} - ${comment}</p>
+                    </div>
+                `;
             }
 
-            document.getElementById('diagnosticText').textContent = diagnosticText;
+            // Afficher le récapitulatif
+            recapitulatifReponsesDiv.innerHTML = recapHTML;
+
+            // Déterminer le diagnostic introductif en fonction du score total
+            let diagnosticIntroText = "";
+            let detailedBilanText = "<h3>Bilan détaillé et conseils :</h3>"; // Préparation du bilan détaillé
+
+            if (totalScore <= 5) {
+                diagnosticIntroText = "Félicitations ! Ton alimentation est globalement bien équilibrée et ne semble pas être un frein majeur à ta perte de poids. Tu as de très bonnes habitudes. Continue ainsi !";
+                detailedBilanText += "<p>Tes réponses montrent une excellente compréhension des bases d'une alimentation saine. Tu gères bien tes repas, ton sommeil et ton activité physique. Pour aller plus loin, assure-toi de maintenir cette cohérence et n'hésite pas à explorer de nouvelles recettes saines pour éviter la monotonie.</p>";
+            } else if (totalScore <= 15) {
+                diagnosticIntroText = "Tu es sur la bonne voie ! Quelques ajustements pourraient t'aider à optimiser ta perte de poids. Tes habitudes sont globalement bonnes, mais il y a des marges de progression intéressantes.";
+                detailedBilanText += "<p>Tes réponses révèlent quelques opportunités d'amélioration. Voici les points sur lesquels tu peux te concentrer pour débloquer ta perte de poids :</p><ul>";
+                detailedComments.forEach(comment => {
+                    if (comment !== "C'est une excellente habitude pour maintenir ton énergie et réguler l'appétit." &&
+                        comment !== "Parfait ! Un repas équilibré au déjeuner est la clé d'une bonne énergie et satiété." &&
+                        comment !== "Idéal ! Un sommeil suffisant est fondamental pour la régulation du poids." &&
+                        comment !== "Excellent choix ! Un dîner léger et équilibré favorise une bonne digestion nocturne." &&
+                        comment !== "Très bien ! Les éviter est un atout majeur pour la perte de poids." &&
+                        comment !== "Excellent ! Manger en pleine conscience est une habitude clé pour la perte de poids." &&
+                        comment !== "Le sentiment idéal ! Tes repas te fournissent ce dont tu as besoin." &&
+                        comment !== "Parfait ! Une bonne répartition des protéines est essentielle." &&
+                        comment !== "Très bien ! C'est un bon niveau d'activité quotidienne." &&
+                        comment !== "Fantastique ! L'activité physique est un pilier essentiel de la perte de poids.") {
+                            detailedBilanText += `<li>${comment}</li>`;
+                        }
+                });
+                detailedBilanText += "</ul><p>En travaillant sur ces aspects, tu verras rapidement des progrès. La cohérence est essentielle !</p>";
+            } else if (totalScore <= 25) {
+                diagnosticIntroText = "Ton alimentation présente plusieurs points qui pourraient freiner ta perte de poids. Mais la bonne nouvelle, c'est que tu as identifié les domaines clés à améliorer. De petits changements peuvent mener à de grands résultats !";
+                detailedBilanText += "<p>Il y a des habitudes qui pourraient impacter ta perte de poids. Concentre-toi sur les domaines suivants pour voir un réel changement :</p><ul>";
+                detailedComments.forEach(comment => {
+                     if (comment !== "C'est une excellente habitude pour maintenir ton énergie et réguler l'appétit." &&
+                        comment !== "Parfait ! Un repas équilibré au déjeuner est la clé d'une bonne énergie et satiété." &&
+                        comment !== "Idéal ! Un sommeil suffisant est fondamental pour la régulation du poids." &&
+                        comment !== "Excellent choix ! Un dîner léger et équilibré favorise une bonne digestion nocturne." &&
+                        comment !== "Très bien ! Les éviter est un atout majeur pour la perte de poids." &&
+                        comment !== "Excellent ! Manger en pleine conscience est une habitude clé pour la perte de poids." &&
+                        comment !== "Le sentiment idéal ! Tes repas te fournissent ce dont tu as besoin." &&
+                        comment !== "Parfait ! Une bonne répartition des protéines est essentielle." &&
+                        comment !== "Très bien ! C'est un bon niveau d'activité quotidienne." &&
+                        comment !== "Fantastique ! L'activité physique est un pilier essentiel de la perte de poids.") {
+                            detailedBilanText += `<li>${comment}</li>`;
+                        }
+                });
+                detailedBilanText += "</ul><p>Commence par les deux ou trois points qui te semblent les plus faciles à modifier. Chaque petit pas compte !</p>";
+            } else {
+                diagnosticIntroText = "Il semblerait que tes habitudes alimentaires et ton mode de vie soient des obstacles significatifs à ta perte de poids. Ne te décourage pas ! Ce quiz est une prise de conscience importante. Le changement est à ta portée.";
+                detailedBilanText += "<p>Tes réponses suggèrent plusieurs défis importants qui peuvent bloquer ta perte de poids. Voici les domaines prioritaires sur lesquels travailler :</p><ul>";
+                detailedComments.forEach(comment => {
+                    if (comment !== "C'est une excellente habitude pour maintenir ton énergie et réguler l'appétit." &&
+                        comment !== "Parfait ! Un repas équilibré au déjeuner est la clé d'une bonne énergie et satiété." &&
+                        comment !== "Idéal ! Un sommeil suffisant est fondamental pour la régulation du poids." &&
+                        comment !== "Excellent choix ! Un dîner léger et équilibré favorise une bonne digestion nocturne." &&
+                        comment !== "Très bien ! Les éviter est un atout majeur pour la perte de poids." &&
+                        comment !== "Excellent ! Manger en pleine conscience est une habitude clé pour la perte de poids." &&
+                        comment !== "Le sentiment idéal ! Tes repas te fournissent ce dont tu as besoin." &&
+                        comment !== "Parfait ! Une bonne répartition des protéines est essentielle." &&
+                        comment !== "Très bien ! C'est un bon niveau d'activité quotidienne." &&
+                        comment !== "Fantastique ! L'activité physique est un pilier essentiel de la perte de poids.") {
+                            detailedBilanText += `<li>${comment}</li>`;
+                        }
+                });
+                detailedBilanText += "</ul><p>Commence par un ou deux changements simples mais réguliers. L'important est de démarrer et de construire de nouvelles habitudes progressivement. Tu as le pouvoir de transformer ta santé !</p>";
+            }
+
+            diagnosticIntroElement.textContent = diagnosticIntroText;
+            diagnosticTextElement.innerHTML = detailedBilanText; // Utiliser innerHTML pour le HTML généré
+
             resultatQuizDiv.style.display = 'block'; // Afficher le diagnostic
             downloadSectionDiv.style.display = 'block'; // Afficher la section de téléchargement
 
@@ -456,8 +613,7 @@
 
         // Gestion du téléchargement du PDF
         document.getElementById('downloadPdfBtn').onclick = function() {
-            // IMPORTANT : Assurez-vous que ce chemin et ce nom de fichier sont EXACTS et que le PDF est bien sur votre GitHub.
-            window.location.href = 'mon_plan_personnel.pdf';
+            window.location.href = 'mon_plan_personnel.pdf'; // Assurez-vous que ce nom de fichier est exact
         };
 
         // Initialisation : afficher la première question au chargement
