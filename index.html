@@ -3,315 +3,701 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>K'COACHING - Minimaliste</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Quiz : Alimentation et Perte de Poids</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Variables CSS */
         :root {
-            /* Palette Minimaliste & Épurée */
-            --background-light: #F9F9F9; /* Fond très clair, presque blanc */
-            --background-gradient-start: #eef2f3; /* Gris très très clair */
-            --background-gradient-end: #e0e9ec; /* Bleu-gris très pâle */
-            --card-background: #FFFFFF; /* Arrière-plan des cartes/boutons blanc pur */
-            --text-dark: #3A4750; /* Texte anthracite doux */
-            --text-light: #5C6F7D; /* Texte gris plus clair pour les détails */
-            --accent-main: #9BB8CD; /* Bleu ciel doux (inspiration sérénité) */
-            --accent-hover: #7E9BB8; /* Bleu ciel légèrement plus foncé au survol */
-            --highlight-attention: #FFDDA6; /* Jaune pâle/crème pour le CTA principal */
-            --highlight-attention-hover: #FFC473; /* Jaune plus soutenu au survol du CTA */
-            --shadow-subtle: rgba(0, 0, 0, 0.05); /* Ombre très légère */
-            --shadow-medium: rgba(0, 0, 0, 0.1); /* Ombre un peu plus visible au survol */
+            --primary-color: #66BB6A; /* Vert clair, accueillant */
+            --primary-dark: #388E3C; /* Vert plus foncé */
+            --secondary-color: #81D4FA; /* Bleu ciel, doux */
+            --background-light: #e0f2f7; /* Fond très léger bleu-vert */
+            --card-background: #FFFFFF; /* Blanc pur pour les cartes */
+            --text-color: #424242; /* Gris foncé doux */
+            --border-color: #B2DFDB; /* Bordure douce */
+            --shadow-light: rgba(0,0,0,0.1);
+            --success-color: #4CAF50;
+            --error-color: #F44336;
+            --info-color: #26C6DA; /* Cyan */
+            --accent-color: #FFB74D; /* Orange doux pour les icônes */
         }
 
         body {
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
-            padding: 20px;
-            background: linear-gradient(135deg, var(--background-gradient-start) 0%, var(--background-gradient-end) 100%);
-            background-size: 200% 200%;
-            animation: gradientAnimation 15s ease infinite alternate;
-            color: var(--text-dark);
+            padding: 15px;
+            background-color: var(--background-light);
+            color: var(--text-color);
+            line-height: 1.6;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
             min-height: 100vh;
             box-sizing: border-box;
-            line-height: 1.6;
-            overflow-y: auto;
+            overflow-x: hidden; /* Prévient les barres de défilement horizontales dues aux animations */
         }
-
-        @keyframes gradientAnimation {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
-        }
-
         .container {
-            width: 100%;
-            max-width: 500px;
-            margin-top: 30px;
-            padding: 30px; /* Un peu plus de padding pour l'espace */
             background-color: var(--card-background);
-            border-radius: 12px; /* Coins légèrement moins arrondis */
-            box-shadow: 0 8px 20px var(--shadow-subtle); /* Ombre plus subtile */
+            padding: 30px 20px;
+            border-radius: 20px; /* Plus arrondi */
+            box-shadow: 0 12px 30px var(--shadow-light); /* Ombre plus prononcée */
+            max-width: 700px;
+            width: 100%;
             text-align: center;
-            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.8s forwards ease-out;
+            position: relative; /* Pour la barre de progression */
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .profile-section {
-            margin-bottom: 35px; /* Plus d'espace */
-        }
-
-        .profile-picture {
-            width: 130px; /* Légèrement plus grande */
-            height: 130px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--accent-main); /* Bordure plus fine */
-            box-shadow: 0 0 12px var(--shadow-medium); /* Ombre élégante */
-            margin-bottom: 5px; /* Réduit l'espace sous le logo */
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         h1 {
-            font-size: 2.4em; /* Plus grand */
-            color: var(--text-dark); /* Plus sobre */
-            margin-bottom: 0px; /* Supprime l'espace sous le titre K'COACHING */
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+            font-size: 1.9em;
             font-weight: 700;
+            line-height: 1.3;
         }
 
-        .tagline {
-            font-size: 1.15em; /* Légèrement plus grande */
-            color: var(--text-light); /* Texte plus léger pour la description */
-            margin-bottom: 25px; /* L'espace en dessous du sous-titre reste le même */
-            font-weight: 500;
-            opacity: 0.9;
+        /* Progress Bar */
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 25px;
+            overflow: hidden; /* Pour que la barre de progression reste à l'intérieur */
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary-color);
+            border-radius: 10px;
+            transition: width 0.5s ease-in-out;
         }
 
-        .link-button {
+        /* Quiz Sections */
+        .quiz-section {
+            text-align: left;
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 15px; /* Plus arrondi */
+            background-color: #fcfcfc;
+            border: 1px solid var(--border-color);
+            transition: all 0.4s ease-in-out; /* Transition plus rapide */
+            opacity: 0;
+            transform: translateX(20px);
+            position: absolute; /* Pour permettre les animations de slide */
+            width: calc(100% - 30px); /* Ajustement pour le padding */
+            left: 15px;
+            top: auto; /* Laisse le positionnement naturel pour la hauteur */
+        }
+        .quiz-section.active {
+            opacity: 1;
+            transform: translateX(0);
+            position: relative; /* Reviens à la position normale */
+        }
+        .quiz-section p {
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+        .quiz-section label {
             display: flex;
             align-items: center;
-            justify-content: flex-start; /* Aligne le contenu à gauche */
-            background-color: var(--accent-main);
-            color: var(--text-dark); /* Couleur de texte plus foncée pour le contraste */
-            padding: 18px 28px; /* Padding légèrement ajusté */
-            margin-bottom: 18px; /* Espacement ajusté */
-            border-radius: 8px; /* Coins plus angulaires */
-            text-decoration: none;
-            font-size: 1.1em;
+            margin-bottom: 12px;
+            cursor: pointer;
+            padding: 12px 15px;
+            background-color: #f5f5f5;
+            border: 2px solid transparent;
+            border-radius: 10px; /* Plus arrondi */
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Petite ombre */
+        }
+        .quiz-section label:hover {
+            background-color: #e0e0e0;
+            border-color: var(--primary-color);
+            transform: translateY(-2px); /* Léger effet hover */
+        }
+        .quiz-section input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.4); /* Agrandir le bouton radio */
+            accent-color: var(--primary-color);
+            cursor: pointer;
+        }
+        .quiz-section input[type="radio"]:checked + span {
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        .quiz-section input[type="radio"]:checked ~ label {
+            background-color: #e8f5e9; /* Vert très clair */
+            border-color: var(--primary-dark);
+            box-shadow: 0 4px 10px rgba(76, 175, 80, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        /* Icônes pour les options (exemple Font Awesome, ou émojis) */
+        .option-icon {
+            margin-right: 10px;
+            font-size: 1.2em;
+            color: var(--accent-color); /* Couleur vive pour les icônes */
+        }
+
+        /* Boutons de navigation */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px; /* Plus arrondi */
+            cursor: pointer;
+            font-size: 1em;
             font-weight: 600;
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 4px 10px var(--shadow-subtle); /* Ombre subtile */
-            overflow: hidden;
-            position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            flex-grow: 1;
+            margin: 0 8px; /* Plus d'espace entre les boutons */
+        }
+        button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px); /* Effet plus prononcé */
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: translateY(0);
+            box-shadow: none;
+        }
+        #prevQuestionBtn {
+            background-color: #90A4AE; /* Gris bleuté */
+        }
+        #prevQuestionBtn:hover {
+            background-color: #607D8B;
         }
 
-        .link-button:hover {
-            background-color: var(--accent-hover);
-            transform: translateY(-3px); /* Soulèvement plus léger */
-            box-shadow: 0 8px 18px var(--shadow-medium); /* Ombre plus marquée au survol */
+        /* Section du résultat et téléchargement */
+        #resultatQuiz {
+            margin-top: 40px;
+            padding: 30px;
+            border-radius: 15px;
+            background-color: #e8f5e9; /* Vert très clair */
+            color: var(--text-color);
+            font-size: 1.05em;
+            text-align: left;
+            display: none;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            animation: fadeIn 0.8s forwards;
+        }
+        #resultatQuiz h2 {
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            font-size: 1.7em;
+        }
+        #recapitulatifReponses h3 {
+            font-size: 1.35em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            color: var(--info-color);
+            border-bottom: 2px solid var(--info-color); /* Ligne sous le titre */
+            padding-bottom: 5px;
+        }
+        .recap-question {
+            margin-bottom: 18px;
+            padding: 12px 18px;
+            background-color: #f0f4f7; /* Bleu gris léger */
+            border-left: 6px solid var(--secondary-color); /* Plus épais */
+            border-radius: 8px;
+            transition: transform 0.2s ease;
+        }
+        .recap-question:hover {
+            transform: translateX(5px);
+        }
+        .recap-question p {
+            margin: 0;
+            font-weight: normal;
+        }
+        .recap-question .score-evaluation {
+            font-size: 0.9em;
+            color: #616161;
+            margin-top: 8px;
+            font-style: italic;
         }
 
-        .link-button:active {
-            transform: translateY(0); /* Retour rapide */
-            box-shadow: 0 2px 5px var(--shadow-subtle);
+        #downloadSection {
+            margin-top: 35px;
+            padding: 30px;
+            background-color: #e3f2fd; /* Bleu très très clair */
+            border: 1px solid #90CAF9;
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            animation: fadeIn 0.8s forwards;
+        }
+        #downloadSection h2 {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            font-size: 1.7em;
+        }
+        #downloadPdfBtn {
+            margin-top: 20px;
+            background-color: var(--secondary-color);
+        }
+        #downloadPdfBtn:hover {
+            background-color: #42A5F5;
+        }
+        .error-message {
+            color: var(--error-color);
+            margin-top: 15px;
+            font-weight: 600;
+            display: none;
+            font-size: 0.95em;
         }
 
-        /* Styles par défaut pour toutes les images dans les boutons */
-        .link-button img {
-            width: 180px; /* Taille par défaut pour les autres images */
-            height: 180px; /* Taille par défaut pour les autres images */
-            margin-right: 35px; /* Augmentation de la marge pour l'alignement */
-            border-radius: 8px; /* Coins plus angulaires pour les images */
-            object-fit: cover;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            flex-shrink: 0;
-            box-shadow: 0 2px 5px var(--shadow-subtle); /* Petite ombre sur l'image */
-        }
-
-        .link-button:hover img {
-            transform: scale(1.02); /* Très léger agrandissement */
-            box-shadow: 0 4px 8px var(--shadow-medium); /* Ombre légèrement plus prononcée */
-        }
-
-        /* Style spécifique pour le bouton "Me contacter" */
-        .link-button.contact-button { 
-            flex-direction: column; /* L'image et le texte seront empilés */
-            justify-content: center; /* Centre verticalement les éléments */
-            align-items: center; /* Centre horizontalement les éléments */
-            padding: 25px 28px; /* Ajuste le padding pour accueillir les éléments empilés */
-        }
-
-        /* Style spécifique pour l'image INSTA.jpg (à l'intérieur du bouton contact) */
-        .link-button.contact-button img { 
-            width: 45px; /* Taille INSTA */
-            height: 45px; /* Taille INSTA */
-            margin-right: 0; /* Plus de marge à droite car c'est en colonne */
-            margin-bottom: 10px; /* Espace en dessous de l'image */
-        }
-
-        .highlight-button {
-            background-color: var(--highlight-attention);
-            color: var(--text-dark);
-            font-weight: 700;
-            animation: pulse-subtle 2s infinite ease-in-out alternate; /* Animation plus douce */
-            border: none; /* Pas de bordure pour un look plus plat */
-            box-shadow: 0 6px 15px rgba(255, 221, 102, 0.5); /* Ombre colorée discrète */
-        }
-
-        .highlight-button:hover {
-            background-color: var(--highlight-attention-hover);
-            color: var(--text-dark);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 22px rgba(255, 196, 115, 0.6); /* Ombre plus intense au survol */
-        }
-
-        @keyframes pulse-subtle {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 6px 15px rgba(255, 221, 102, 0.5);
-            }
-            50% {
-                transform: scale(1.01); /* Léger agrandissement */
-                box-shadow: 0 8px 18px rgba(255, 221, 102, 0.6);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 6px 15px rgba(255, 221, 102, 0.5);
-            }
-        }
-
-        .social-icons {
-            margin-top: 45px; /* Plus d'espace */
-            display: flex;
-            justify-content: center;
-            gap: 28px; /* Espacement ajusté */
-        }
-
-        .social-icon {
-            color: var(--text-light); /* Couleur des icônes plus discrète */
-            font-size: 2.3em; /* Légèrement plus grandes */
-            transition: color 0.3s ease, transform 0.2s ease;
-        }
-
-        /* Couleurs spécifiques aux marques au survol (restent vives pour le contraste) */
-        .social-icon.instagram:hover { color: #E1306C; transform: translateY(-3px); }
-        .social-icon.tiktok:hover { color: #69C9D0; transform: translateY(-3px); }
-        .social-icon.facebook:hover { color: #1877F2; transform: translateY(-3px); }
-        .social-icon.linkedin:hover { color: #0A66C2; transform: translateY(-3px); }
-
-        /* Responsive adjustments */
-        @media (max-width: 600px) {
+        /* MEDIA QUERIES pour les écrans plus grands */
+        @media (min-width: 600px) {
             body {
-                padding: 15px;
+                padding: 20px;
             }
             .container {
-                margin-top: 15px;
-                padding: 25px;
-            }
-            .profile-picture {
-                width: 110px;
-                height: 110px;
-                margin-bottom: 3px; /* Réduit encore plus l'espace sur mobile */
+                padding: 50px;
             }
             h1 {
+                font-size: 2.5em;
+            }
+            .quiz-section p {
+                font-size: 1.2em;
+            }
+            .quiz-section label {
+                padding: 15px 20px;
+            }
+            .quiz-section input[type="radio"] {
+                transform: scale(1.5);
+            }
+            button {
+                font-size: 1.1em;
+            }
+            #resultatQuiz h2 {
                 font-size: 2em;
-                margin-bottom: 0px; /* Aucune marge sur mobile non plus */
             }
-            .tagline {
-                font-size: 1.05em;
+            #recapitulatifReponses h3 {
+                font-size: 1.5em;
             }
-            .link-button {
-                padding: 12px 20px;
+            .recap-question p {
                 font-size: 1em;
-                margin-bottom: 15px;
-                flex-direction: row; /* Garde la disposition horizontale */
-                justify-content: flex-start; /* Aligne toujours à gauche */
-                gap: 15px; /* Espacement entre l'image et le texte */
             }
-            .link-button img {
-                width: 100px; /* Taille par défaut pour les autres images sur mobile */
-                height: 100px;
-                margin-right: 0; /* Pas de marge additionnelle car `gap` gère l'espace */
-                margin-bottom: 0; /* Pas de marge en bas */
+            .recap-question .score-evaluation {
+                font-size: 0.9em;
             }
-            /* Style spécifique pour le bouton "Me contacter" sur mobile */
-            .link-button.contact-button {
-                flex-direction: column; /* Re-définit en colonne pour mobile */
-                justify-content: center;
-                align-items: center;
-                padding: 20px 20px; /* Ajuste le padding pour mobile */
-            }
-            .link-button.contact-button img {
-                width: 30px; /* Taille INSTA sur mobile */
-                height: 30px;
-                margin-right: 0; /* Pas de marge à droite en colonne */
-                margin-bottom: 8px; /* Espace en dessous de l'image sur mobile */
-            }
-            .social-icons {
-                margin-top: 35px;
-                gap: 18px;
-            }
-            .social-icon {
-                font-size: 2em;
+            #downloadSection h2 {
+                font-size: 1.8em;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="profile-section">
-            <img src="logo.jpg" alt="Logo K'COACHING" class="profile-picture">
-            <h1>K'COACHING</h1>
-            <p class="tagline">Transforme ton bien-être, de l'intérieur.</p>
+        <h1>Découvre les Secrets de ta Perte de Poids !</h1>
+
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
         </div>
 
-        <a href="https://kcoaching02.github.io/METAGEMINI/" target="_blank" rel="noopener noreferrer" class="link-button highlight-button">
-            <img src="CALCULATEUR.jpg" alt="Icône Calculateur Métabolique">
-            <span>Découvre ton Bilan Métabolique !</span>
-        </a>
+        <form id="quizForm">
+            <div class="quiz-section active" data-question-id="1">
+                <p>1. Sautes-tu un repas dans la journée ?</p>
+                <label><input type="radio" name="q1" value="A"> <span class="option-icon">🍽️</span> <span>A. Oui, souvent le petit-déj</span></label>
+                <label><input type="radio" name="q1" value="B"> <span class="option-icon">⏰</span> <span>B. Oui, souvent le déjeuner (midi)</span></label>
+                <label><input type="radio" name="q1" value="C"> <span class="option-icon">✅</span> <span>C. Non, je mange 3 repas par jour</span></label>
+                <label><input type="radio" name="q1" value="D"> <span class="option-icon">🤔</span> <span>D. Je mange à des horaires irréguliers</span></label>
+            </div>
 
-        <a href="https://beacons.ai/kcoaching/programmes" target="_blank" rel="noopener noreferrer" class="link-button">
-            <img src="PROGRAMMES.png" alt="Icône Programmes Perte de Poids">
-            <span>Les programmes perte de poids</span>
-        </a>
+            <div class="quiz-section" data-question-id="2">
+                <p>2. Le midi, tu manges plutôt :</p>
+                <label><input type="radio" name="q2" value="A"> <span class="option-icon">🥡</span> <span>A. Un plat tout prêt, ou sur le pouce</span></label>
+                <label><input type="radio" name="q2" value="B"> <span class="option-icon">🥗</span> <span>B. Un vrai repas complet et équilibré</span></label>
+                <label><input type="radio" name="q2" value="C"> <span class="option-icon">🥣</span> <span>C. Une salade ou une soupe légère</span></label>
+                <label><input type="radio" name="q2" value="D"> <span class="option-icon">💨</span> <span>D. Je saute ce repas par manque de temps ou d’appétit</span></label>
+            </div>
 
-        <a href="quiz_alimentation.html" target="_blank" rel="noopener noreferrer" class="link-button">
-            <img src="QUIZ.png" alt="Icône Quiz sur l'alimentation">
-            <span>Fais le Quiz Alimentation !</span>
-        </a>
+            <div class="quiz-section" data-question-id="3">
+                <p>3. Ton sommeil : tu dors en moyenne…</p>
+                <label><input type="radio" name="q3" value="A"> <span class="option-icon">😴</span> <span>A. Moins de 5h par nuit</span></label>
+                <label><input type="radio" name="q3" value="B"> <span class="option-icon">🌙</span> <span>B. Entre 5h et 6h</span></label>
+                <label><input type="radio" name="q3" value="C"> <span class="option-icon">🛌</span> <span>C. Entre 7h et 8h</span></label>
+                <label><input type="radio" name="q3" value="D"> <span class="option-icon">💤</span> <span>D. 9h ou plus</span></label>
+            </div>
 
-        <a href="https://shop.beacons.ai/kcoaching/910d5675-39f4-4465-9e10-18b5abbce84f" target="_blank" rel="noopener noreferrer" class="link-button">
-            <img src="SOINS.jpg" alt="Icône Soins Énergétiques">
-            <span>Soins énergétiques</span>
-        </a>
+            <div class="quiz-section" data-question-id="4">
+                <p>4. Ton dîner, c’est souvent :</p>
+                <label><input type="radio" name="q4" value="A"> <span class="option-icon">🍕</span> <span>A. Un plat plaisir (raclette, pizza, burger maison…)</span></label>
+                <label><input type="radio" name="q4" value="B"> <span class="option-icon">🥕🥩</span> <span>B. Un repas équilibré (protéines, légumes, un peu de féculents)</span></label>
+                <label><input type="radio" name="q4" value="C"> <span class="option-icon">🍵</span> <span>C. Une soupe + yaourt ou fruit</span></label>
+                <label><input type="radio" name="q4" value="D"> <span class="option-icon">📺</span> <span>D. Je mange devant la télé sans trop me rappeler quoi</span></label>
+            </div>
 
-        <a href="https://stan.store/Brilleetvibre/p/formation-dsa--digital-success-academy" target="_blank" rel="noopener noreferrer" class="link-button">
-            <img src="DSA.png" alt="Icône DSA">
-            <span>Lance ton Business en Ligne Rentable</span>
-        </a>
+            <div class="quiz-section" data-question-id="5">
+                <p>5. Combien de fois par semaine manges-tu des pizzas, burgers ou fast-food ?</p>
+                <label><input type="radio" name="q5" value="A"> <span class="option-icon">🍔🍟</span> <span>A. 3 fois ou plus</span></label>
+                <label><input type="radio" name="q5" value="B"> <span class="option-icon">🤔</span> <span>B. 1 à 2 fois</span></label>
+                <label><input type="radio" name="q5" value="C"> <span class="option-icon"> infrequent</span> <span>C. Rarement, une fois de temps en temps</span></label>
+                <label><input type="radio" name="q5" value="D"> <span class="option-icon">🚫</span> <span>D. Jamais, j’évite complètement</span></label>
+            </div>
 
-        <a href="https://stan.store/affiliates/80c38116-8aa0-4d1f-9199-39de2694025b" target="_blank" rel="noopener noreferrer" class="link-button">
-            <img src="CLUBVIRAL.JPG" alt="Icône Club Viral">
-            <span>Rejoins le Club Viral & Décuple ta Visibilité</span>
-        </a>
-        
-        <a href="https://www.instagram.com/direct/t/17846779833046780" target="_blank" rel="noopener noreferrer" class="link-button contact-button">
-            <img src="INSTA.jpg" alt="Icône Instagram Contact">
-            <span>Me contacter</span>
-        </a>
+            <div class="quiz-section" data-question-id="6">
+                <p>6. Manges-tu souvent devant un écran ?</p>
+                <label><input type="radio" name="q6" value="A"> <span class="option-icon">📺</span> <span>A. Toujours devant la télé</span></label>
+                <label><input type="radio" name="q6" value="B"> <span class="option-icon">📱</span> <span>B. Souvent devant mon téléphone</span></label>
+                <label><input type="radio" name="q6" value="C"> <span class="option-icon">🤷‍♀️</span> <span>C. Parfois, mais j’essaie de faire attention</span></label>
+                <label><input type="radio" name="q6" value="D"> <span class="option-icon">🧘‍♀️</span> <span>D. Non, je mange à table sans distraction</span></label>
+            </div>
 
-        <div class="social-icons">
-            <a href="https://www.instagram.com/kcoaching02/" target="_blank" rel="noopener noreferrer" class="social-icon instagram" aria-label="Instagram">
-                <i class="fab fa-instagram"></i>
-            </a>
-            <a href="https://www.tiktok.com/@kcoaching?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer" class="social-icon tiktok" aria-label="TikTok">
-                <i class="fab fa-tiktok"></i>
-            </a>
+            <div class="quiz-section" data-question-id="7">
+                <p>7. Après tes repas, tu te sens :</p>
+                <label><input type="radio" name="q7" value="A"> <span class="option-icon">🤢</span> <span>A. Fatiguée ou ballonnée</span></label>
+                <label><input type="radio" name="q7" value="B"> <span class="option-icon"> cravings</span> <span>B. Encore un peu affamée</span></label>
+                <label><input type="radio" name="q7" value="C"> <span class="option-icon">😊</span> <span>C. Satisfaite et rassasiée</span></label>
+                <label><input type="radio" name="q7" value="D"> <span class="option-icon">🍰</span> <span>D. Prête à grignoter ou chercher un dessert</span></label>
+            </div>
+
+            <div class="quiz-section" data-question-id="8">
+                <p>8. Tes apports en protéines, tu dirais que…</p>
+                <label><input type="radio" name="q8" value="A"> <span class="option-icon">🥩⬇️</span> <span>A. J’en mange trop peu ou pas à chaque repas</span></label>
+                <label><input type="radio" name="q8" value="B"> <span class="option-icon">🤷‍♀️</span> <span>B. Je n’ai aucune idée de combien il m’en faut</span></label>
+                <label><input type="radio" name="q8" value="C"> <span class="option-icon">💪</span> <span>C. Je fais attention à en avoir à chaque repas (25–30g midi/soir)</span></label>
+                <label><input type="radio" name="q8" value="D"> <span class="option-icon">🌿❓</span> <span>D. Je suis végé/végan mais sans suivi précis</span></label>
+            </div>
+
+            <div class="quiz-section" data-question-id="9">
+                <p>9. Dans tes repas principaux, il y a souvent des féculents ?</p>
+                <label><input type="radio" name="q9" value="A"> <span class="option-icon">🍚🥖</span> <span>A. Dans les deux repas (pâtes, riz, pain…)</span></label>
+                <label><input type="radio" name="q9" value="B"> <span class="option-icon">🍝</span> <span>B. Au moins une fois par jour</span></label>
+                <label><input type="radio" name="q9" value="C"> <span class="option-icon">🥦🥩</span> <span>C. Très peu, je privilégie légumes et protéines</span></label>
+                <label><input type="radio" name="q9" value="D"> <span class="option-icon">🤷‍♀️</span> <span>D. Je ne fais pas attention</span></label>
+            </div>
+
+            <div class="quiz-section" data-question-id="10">
+                <p>10. Combien de pas fais-tu en moyenne chaque jour ?</p>
+                <label><input type="radio" name="q10" value="A"> <span class="option-icon">🚶‍♀️⬇️</span> <span>A. Moins de 5000</span></label>
+                <label><input type="radio" name="q10" value="B"> <span class="option-icon">🚶‍♀️💨</span> <span>B. Entre 5000 et 7000</span></label>
+                <label><input type="radio" name="q10" value="C"> <span class="option-icon">🏃‍♀️</span> <span>C. Entre 7000 et 10 000</span></label>
+                <label><input type="radio" name="q10" value="D"> <span class="option-icon">🚀</span> <span>D. Plus de 10 000</span></label>
+            </div>
+
+            <p class="error-message" id="errorMessage">Veuillez sélectionner une réponse pour continuer.</p>
+
+            <div class="navigation-buttons">
+                <button type="button" id="prevQuestionBtn" style="display: none;">Précédent</button>
+                <button type="button" id="submitQuizBtn" style="display: none;">Obtenir mon diagnostic</button>
+            </div>
+        </form>
+
+        <div id="resultatQuiz">
+            <h2>Ton bilan personnalisé :</h2>
+            <p id="diagnosticIntro"></p>
+            <div id="recapitulatifReponses">
+                <h3>Récapitulatif de tes réponses :</h3>
+            </div>
+            <p id="diagnosticText"></p>
+        </div>
+
+        <div id="downloadSection">
+            <h2>Télécharge maintenant ta liste de courses indispensable pour une perte de poids !</h2>
+            <button id="downloadPdfBtn">Obtenir ma liste de courses</button>
         </div>
     </div>
+
+    <script>
+        const quizSections = document.querySelectorAll('.quiz-section');
+        const prevBtn = document.getElementById('prevQuestionBtn');
+        const submitBtn = document.getElementById('submitQuizBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const resultatQuizDiv = document.getElementById('resultatQuiz');
+        const diagnosticIntroElement = document.getElementById('diagnosticIntro');
+        const recapitulatifReponsesDiv = document.getElementById('recapitulatifReponses');
+        const diagnosticTextElement = document.getElementById('diagnosticText');
+        const downloadSectionDiv = document.getElementById('downloadSection');
+        const progressBar = document.getElementById('progressBar');
+
+        let currentQuestionIndex = 0;
+        const totalQuestions = quizSections.length;
+        const userAnswers = {}; // Pour stocker les réponses de l'utilisateur
+
+        // Définitions des questions et de leurs réponses avec des scores et commentaires
+        const questionsData = {
+            q1: {
+                text: "Sautes-tu un repas dans la journée ?",
+                options: {
+                    A: { label: "A. Oui, souvent le petit-déj", score: 3, comment: "Sauter le petit-déjeuner peut perturber ton métabolisme et favoriser le grignotage." },
+                    B: { label: "B. Oui, souvent le déjeuner (midi)", score: 3, comment: "Passer le déjeuner peut mener à des baisses d'énergie et des envies de sucre plus tard." },
+                    C: { label: "C. Non, je mange 3 repas par jour", score: 0, comment: "C'est une excellente habitude pour maintenir ton énergie et réguler l'appétit tout au long de la journée." },
+                    D: { label: "D. Je mange à des horaires irréguliers", score: 2, comment: "Des repas à heures fixes aident à réguler la faim, la digestion et à prévenir les pics de glycémie." }
+                }
+            },
+            q2: {
+                text: "Le midi, tu manges plutôt :",
+                options: {
+                    A: { label: "A. Un plat tout prêt, ou sur le pouce", score: 3, comment: "Les plats préparés sont souvent riches en sucres cachés, sel et graisses saturées, ce qui nuit à la perte de poids." },
+                    B: { label: "B. Un vrai repas complet et équilibré", score: 0, comment: "Parfait ! Un repas équilibré au déjeuner, riche en protéines et légumes, est la clé d'une bonne énergie et d'une satiété durable." },
+                    C: { label: "C. Une salade ou une soupe légère", score: 1, comment: "Bonne intention, mais assure-toi d'avoir assez de protéines et de bonnes graisses pour être bien rassasié(e) et éviter les fringales." },
+                    D: { label: "D. Je saute ce repas par manque de temps ou d’appétit", score: 3, comment: "Sauter un repas n'est pas idéal pour une perte de poids durable et peut ralentir ton métabolisme." }
+                }
+            },
+            q3: {
+                text: "Ton sommeil : tu dors en moyenne…",
+                options: {
+                    A: { label: "A. Moins de 5h par nuit", score: 4, comment: "Un manque de sommeil sévère peut sérieusement dérégler les hormones de la faim (leptine et ghréline), augmentant les fringales et le stockage des graisses." },
+                    B: { label: "B. Entre 5h et 6h", score: 2, comment: "Un sommeil insuffisant peut impacter ton énergie, ta motivation à bouger et tes choix alimentaires." },
+                    C: { label: "C. Entre 7h et 8h", score: 0, comment: "Idéal ! Un sommeil suffisant et réparateur est fondamental pour la régulation du poids, la récupération musculaire et le bien-être général." },
+                    D: { label: "D. 9h ou plus", score: 1, comment: "Trop de sommeil peut parfois aussi être lié à un métabolisme ralenti ou d'autres facteurs. L'important est la qualité du sommeil." }
+                }
+            },
+            q4: {
+                text: "Ton dîner, c’est souvent :",
+                options: {
+                    A: { label: "A. Un plat plaisir (raclette, pizza, burger maison…)", score: 3, comment: "Les dîners lourds et riches avant de dormir peuvent perturber la digestion, le sommeil et favoriser le stockage des graisses." },
+                    B: { label: "B. Un repas équilibré (protéines, légumes, un peu de féculents)", score: 0, comment: "Excellent choix ! Un dîner léger, riche en protéines et légumes, favorise une bonne digestion nocturne et aide à la récupération." },
+                    C: { label: "C. Une soupe + yaourt ou fruit", score: 1, comment: "C'est léger, mais assure-toi d'avoir suffisamment de protéines pour ne pas avoir faim avant de dormir ou au réveil." },
+                    D: { label: "D. Je mange devant la télé sans trop me rappeler quoi", score: 2, comment: "Manger en étant distrait devant un écran mène souvent à manger plus et à moins apprécier le repas, sans conscience de la satiété." }
+                }
+            },
+            q5: {
+                text: "Combien de fois par semaine manges-tu des pizzas, burgers ou fast-food ?",
+                options: {
+                    A: { label: "A. 3 fois ou plus", score: 4, comment: "Ces aliments sont des bombes caloriques, riches en graisses, sucres et additifs, qui freinent significativement la perte de poids. C'est un point clé à modifier." },
+                    B: { label: "B. 1 à 2 fois", score: 2, comment: "À consommer avec modération. Ces repas fréquents peuvent compromettre tes objectifs de perte de poids et ta santé à long terme." },
+                    C: { label: "C. Rarement, une fois de temps en temps", score: 1, comment: "C'est une bonne approche pour se faire plaisir sans excès et maintenir l'équilibre." },
+                    D: { label: "D. Jamais, j’évite complètement", score: 0, comment: "Très bien ! Les éviter est un atout majeur pour la perte de poids et la santé générale." }
+                }
+            },
+            q6: {
+                text: "Manges-tu souvent devant un écran ?",
+                options: {
+                    A: { label: "A. Toujours devant la télé", score: 3, comment: "La distraction réduit la conscience de la satiété, ce qui peut t'amener à manger plus que nécessaire." },
+                    B: { label: "B. Souvent devant mon téléphone", score: 3, comment: "Comme la télé, le téléphone distrait et nuit à l'écoute de tes signaux de faim et de satiété." },
+                    C: { label: "C. Parfois, mais j’essaie de faire attention", score: 1, comment: "Un effort louable. Essaye de t'accorder au moins un repas par jour sans distraction pour te reconnecter à tes sensations." },
+                    D: { label: "D. Non, je mange à table sans distraction", score: 0, comment: "Excellent ! Manger en pleine conscience est une habitude clé pour mieux ressentir la satiété et réguler ton alimentation." }
+                }
+            },
+            q7: {
+                text: "Après tes repas, tu te sens :",
+                options: {
+                    A: { label: "A. Fatiguée ou ballonnée", score: 3, comment: "Ces sensations peuvent indiquer une mauvaise digestion, des repas trop lourds ou un déséquilibre alimentaire." },
+                    B: { label: "B. Encore un peu affamée", score: 2, comment: "Cela suggère un manque de protéines, de fibres ou de volume dans tes repas. Tu pourrais être plus rassasié(e)." },
+                    C: { label: "C. Satisfaite et rassasiée", score: 0, comment: "Le sentiment idéal ! Tes repas te fournissent ce dont tu as besoin sans excès, c'est le signe d'un bon équilibre." },
+                    D: { label: "D. Prête à grignoter ou chercher un dessert", score: 2, comment: "Cela peut signaler un déséquilibre des macronutriments (manque de protéines/fibres) ou une habitude liée au sucre. Fais attention à ces envies." }
+                }
+            },
+            q8: {
+                text: "Tes apports en protéines, tu dirais que…",
+                options: {
+                    A: { label: "A. J’en mange trop peu ou pas à chaque repas", score: 3, comment: "Les protéines sont cruciales pour la satiété, la construction musculaire et le métabolisme. Un manque peut entraîner des fringales." },
+                    B: { label: "B. Je n’ai aucune idée de combien il m’en faut", score: 2, comment: "Comprendre tes besoins en protéines est un levier important pour la perte de poids et le maintien de ta masse musculaire." },
+                    C: { label: "C. Je fais attention à en avoir à chaque repas (25–30g midi/soir)", score: 0, comment: "Parfait ! Une bonne répartition des protéines tout au long de la journée est essentielle pour la satiété et un métabolisme actif." },
+                    D: { label: "D. Je suis végé/végan mais sans suivi précis", score: 2, comment: "Si tu suis un régime végétarien/végan, il est crucial de bien planifier tes apports en protéines végétales pour éviter les carences et rester rassasié(e)." }
+                }
+            },
+            q9: {
+                text: "Dans tes repas principaux, il y a souvent des féculents ?",
+                options: {
+                    A: { label: "A. Dans les deux repas (pâtes, riz, pain…)", score: 2, comment: "Les féculents fournissent de l'énergie, mais en consommer trop et à tous les repas peut impacter la glycémie et la perte de poids. Privilégie les céréales complètes." },
+                    B: { label: "B. Au moins une fois par jour", score: 1, comment: "Bon équilibre ! L'important est la quantité et le type (privilégie les complexes)." },
+                    C: { label: "C. Très peu, je privilégie légumes et protéines", score: 0, comment: "Excellente stratégie pour réduire l'apport calorique tout en étant rassasié(e) et en favorisant la perte de poids." },
+                    D: { label: "D. Je ne fais pas attention", score: 2, comment: "La quantité et le type de féculents peuvent avoir un impact majeur sur ta glycémie, ton énergie et ta capacité à perdre du poids." }
+                }
+            },
+            q10: {
+                text: "10. Combien de pas fais-tu en moyenne chaque jour ?",
+                options: {
+                    A: { label: "A. Moins de 5000", score: 3, comment: "Un faible niveau d'activité physique est un frein majeur à la dépense calorique et à la perte de poids. Chaque pas compte !" },
+                    B: { label: "B. Entre 5000 et 7000", score: 2, comment: "C'est un bon début, mais viser plus haut (idéalement 7000-10000 pas) peut accélérer tes résultats et améliorer ta santé." },
+                    C: { label: "C. Entre 7000 et 10 000", score: 1, comment: "Très bien ! C'est un bon niveau d'activité quotidienne pour soutenir tes objectifs de perte de poids." },
+                    D: { label: "D. Plus de 10 000", score: 0, comment: "Fantastique ! L'activité physique régulière est un pilier essentiel de la perte de poids et du bien-être général." }
+                }
+            }
+        };
+
+        // Fonction pour afficher une question spécifique
+        function showQuestion(index, direction = 'next') {
+            // Mise à jour de la barre de progression
+            const progress = ((index + 1) / totalQuestions) * 100;
+            progressBar.style.width = `${progress}%`;
+
+            if (index < 0 || index >= totalQuestions) return; // Sécurité
+
+            const currentActive = document.querySelector('.quiz-section.active');
+            const nextQuestion = quizSections[index];
+
+            if (currentActive) {
+                // Animer la sortie de la question actuelle
+                currentActive.style.opacity = 0;
+                currentActive.style.transform = `translateX(${direction === 'next' ? '-20px' : '20px'})`;
+                currentActive.classList.remove('active');
+                
+                // Attendre la fin de l'animation de sortie avant d'animer l'entrée
+                setTimeout(() => {
+                    currentActive.style.display = 'none'; // Cacher l'ancienne question
+                    nextQuestion.style.display = 'block'; // Afficher la nouvelle question
+                    setTimeout(() => {
+                        nextQuestion.style.opacity = 1;
+                        nextQuestion.style.transform = 'translateX(0)';
+                        nextQuestion.classList.add('active');
+                    }, 50); // Petit délai pour que l'opacité s'applique après le display block
+                }, 300); // Durée de l'animation de sortie
+            } else {
+                // Pour la première question (pas d'animation de sortie)
+                nextQuestion.style.display = 'block';
+                setTimeout(() => {
+                    nextQuestion.style.opacity = 1;
+                    nextQuestion.style.transform = 'translateX(0)';
+                    nextQuestion.classList.add('active');
+                }, 50);
+            }
+
+            // Mettre à jour la visibilité des boutons
+            prevBtn.style.display = index === 0 ? 'none' : 'block';
+            submitBtn.style.display = index === totalQuestions - 1 ? 'block' : 'none';
+
+            errorMessage.style.display = 'none';
+        }
+
+        // Écouteur d'événements pour toutes les options radio
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', (event) => {
+                const questionName = event.target.name;
+                const selectedValue = event.target.value;
+                userAnswers[questionName] = selectedValue;
+
+                errorMessage.style.display = 'none';
+
+                setTimeout(() => {
+                    if (currentQuestionIndex < totalQuestions - 1) {
+                        currentQuestionIndex++;
+                        showQuestion(currentQuestionIndex, 'next');
+                    } else {
+                        calculerDiagnostic();
+                    }
+                }, 400); // Délai pour l'animation de sélection
+            });
+        });
+
+        // Gérer le bouton Précédent
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion(currentQuestionIndex, 'prev');
+            }
+        });
+
+        // Gérer le bouton de soumission du quiz
+        submitBtn.addEventListener('click', () => {
+            const currentQuestionName = `q${currentQuestionIndex + 1}`;
+            const selectedOption = document.querySelector(`input[name="${currentQuestionName}"]:checked`);
+
+            if (!selectedOption) {
+                errorMessage.textContent = "Veuillez sélectionner une réponse pour valider le quiz.";
+                errorMessage.style.display = 'block';
+                return;
+            }
+            calculerDiagnostic();
+        });
+
+        // Fonction de calcul du diagnostic
+        function calculerDiagnostic() {
+            let totalScore = 0;
+            let recapHTML = '';
+            let problematicAreas = [];
+
+            for (let i = 1; i <= totalQuestions; i++) {
+                const questionName = `q${i}`;
+                const userAnswer = userAnswers[questionName];
+
+                if (!userAnswer) {
+                    errorMessage.textContent = "Veuillez répondre à toutes les questions avant de valider.";
+                    errorMessage.style.display = 'block';
+                    return;
+                }
+
+                const questionData = questionsData[questionName];
+                const optionData = questionData.options[userAnswer];
+                const score = optionData.score;
+                const comment = optionData.comment;
+
+                totalScore += score;
+                if (score > 0) {
+                    problematicAreas.push(comment);
+                }
+
+                recapHTML += `
+                    <div class="recap-question">
+                        <p><strong>${i}. ${questionData.text}</strong></p>
+                        <p>Ta réponse : ${optionData.label.substring(3)}</p> <p class="score-evaluation">Ton diagnostic sur cette réponse : <em>${comment}</em></p>
+                    </div>
+                `;
+            }
+
+            recapitulatifReponsesDiv.innerHTML = recapHTML;
+
+            let diagnosticIntroText = "";
+            let detailedBilanText = "<h3>Bilan détaillé et pistes d'amélioration :</h3>";
+
+            if (totalScore <= 5) {
+                diagnosticIntroText = "Félicitations ! Ton alimentation et tes habitudes de vie sont globalement très bien alignées avec une perte de poids saine. Tu as de solides fondations !";
+                detailedBilanText += "<p>Tes réponses montrent une **excellente compréhension** des principes d'une alimentation saine et d'un mode de vie équilibré. Tu gères bien tes repas, ton sommeil et ton niveau d'activité physique. Pour maintenir ces acquis et continuer à progresser, la **cohérence** sera ta meilleure alliée. N'hésite pas à explorer de nouvelles recettes saines pour **éviter la monotonie** et garder le plaisir de manger sainement. Tu es sur la bonne voie !</p>";
+            } else if (totalScore <= 15) {
+                diagnosticIntroText = "Tu es sur la **très bonne voie** ! Quelques ajustements ciblés peuvent t'aider à optimiser ta perte de poids. Tes habitudes sont globalement bonnes, mais il existe des **marges de progression intéressantes** qui feront une grande différence.";
+                detailedBilanText += "<p>Tes réponses révèlent des **opportunités d'amélioration spécifiques**. Voici les points sur lesquels tu peux te concentrer pour débloquer ta perte de poids :</p><ul>";
+                problematicAreas.forEach(comment => {
+                    detailedBilanText += `<li>${comment}</li>`;
+                });
+                detailedBilanText += "</ul><p>En travaillant sur ces aspects, même par **petites étapes**, tu verras rapidement des progrès significatifs. La **régularité** et la **patience** sont essentielles !</p>";
+            } else if (totalScore <= 25) {
+                diagnosticIntroText = "Ton alimentation et tes habitudes de vie présentent **plusieurs points importants** qui pourraient freiner ta perte de poids. Ne t'inquiète pas, c'est le moment idéal pour **prendre conscience** et mettre en place des changements pour des résultats durables !";
+                detailedBilanText += "<p>Il y a des habitudes qui ont un **impact certain** sur ta capacité à perdre du poids. Concentre-toi sur les domaines suivants pour voir un réel changement :</p><ul>";
+                problematicAreas.forEach(comment => {
+                    detailedBilanText += `<li>${comment}</li>`;
+                });
+                detailedBilanText += "</ul><p>Commence par les **deux ou trois points** qui te semblent les plus faciles à modifier pour commencer à construire une dynamique positive. Chaque petit pas compte et te rapprochera de tes objectifs !</p>";
+            } else {
+                diagnosticIntroText = "Il semblerait que tes habitudes actuelles soient un **obstacle significatif** à ta perte de poids. Mais la bonne nouvelle, c'est que tu as maintenant une **clarté totale** sur les domaines à améliorer. Le changement est à ta portée, et ce quiz est le premier pas vers une transformation !";
+                detailedBilanText += "<p>Tes réponses suggèrent plusieurs **défis importants** qui peuvent bloquer ta perte de poids. Voici les domaines **prioritaires** sur lesquels travailler pour une véritable transformation :</p><ul>";
+                problematicAreas.forEach(comment => {
+                    detailedBilanText += `<li>${comment}</li>`;
+                });
+                detailedBilanText += "</ul><p>Commence par un ou deux **changements simples mais réguliers** qui te paraissent gérables. L'important est de démarrer et de construire de nouvelles habitudes progressivement. N'hésite pas à te faire accompagner pour ces changements profonds. **Tu as le pouvoir de transformer ta santé et d'atteindre tes objectifs !**</p>";
+            }
+
+            diagnosticIntroElement.textContent = diagnosticIntroText;
+            diagnosticTextElement.innerHTML = detailedBilanText;
+
+            // Cacher la barre de progression une fois le quiz terminé
+            document.querySelector('.progress-bar-container').style.display = 'none';
+
+            resultatQuizDiv.style.display = 'block';
+            downloadSectionDiv.style.display = 'block';
+            document.getElementById('quizForm').style.display = 'none';
+        }
+
+        // Gestion du téléchargement du PDF
+        document.getElementById('downloadPdfBtn').onclick = function() {
+            window.location.href = 'mon_plan_personnel.pdf';
+        };
+
+        // Initialisation : afficher la première question au chargement
+        showQuestion(currentQuestionIndex);
+    </script>
 </body>
 </html>
