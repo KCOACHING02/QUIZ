@@ -6,25 +6,26 @@
     <title>Quiz : Alimentation et Perte de Poids</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Variables CSS pour faciliter les changements de thème */
+        /* Variables CSS */
         :root {
-            --primary-color: #4CAF50; /* Vert frais */
-            --primary-dark: #388E3C;
-            --secondary-color: #2196F3; /* Bleu */
-            --background-light: #f9f9f9;
-            --text-color: #333;
-            --border-color: #ddd;
-            --shadow-light: rgba(0,0,0,0.08);
+            --primary-color: #66BB6A; /* Vert clair, accueillant */
+            --primary-dark: #388E3C; /* Vert plus foncé */
+            --secondary-color: #81D4FA; /* Bleu ciel, doux */
+            --background-light: #e0f2f7; /* Fond très léger bleu-vert */
+            --card-background: #FFFFFF; /* Blanc pur pour les cartes */
+            --text-color: #424242; /* Gris foncé doux */
+            --border-color: #B2DFDB; /* Bordure douce */
+            --shadow-light: rgba(0,0,0,0.1);
             --success-color: #4CAF50;
             --error-color: #F44336;
-            --warning-color: #FFC107;
-            --info-color: #17a2b8; /* Nouvelle couleur pour l'info */
+            --info-color: #26C6DA; /* Cyan */
+            --accent-color: #FFB74D; /* Orange doux pour les icônes */
         }
 
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
-            padding: 15px; /* Réduit le padding général pour les petits écrans */
+            padding: 15px;
             background-color: var(--background-light);
             color: var(--text-color);
             line-height: 1.6;
@@ -33,18 +34,20 @@
             align-items: center;
             min-height: 100vh;
             box-sizing: border-box;
+            overflow-x: hidden; /* Prévient les barres de défilement horizontales dues aux animations */
         }
         .container {
-            background-color: #fff;
-            padding: 30px 20px; /* Ajuste le padding pour les mobiles */
-            border-radius: 15px;
-            box-shadow: 0 10px 30px var(--shadow-light);
+            background-color: var(--card-background);
+            padding: 30px 20px;
+            border-radius: 20px; /* Plus arrondi */
+            box-shadow: 0 12px 30px var(--shadow-light); /* Ombre plus prononcée */
             max-width: 700px;
             width: 100%;
             text-align: center;
             opacity: 0;
             transform: translateY(20px);
             animation: fadeIn 0.8s forwards ease-out;
+            position: relative; /* Pour la barre de progression */
         }
 
         @keyframes fadeIn {
@@ -56,93 +59,121 @@
 
         h1 {
             color: var(--primary-dark);
-            margin-bottom: 15px;
-            font-size: 1.8em; /* Plus petit sur mobile */
+            margin-bottom: 20px;
+            font-size: 1.9em;
             font-weight: 700;
-        }
-        .intro-text {
-            font-size: 1em; /* Plus petit sur mobile */
-            color: #666;
-            margin-bottom: 25px; /* Ajuste la marge */
+            line-height: 1.3;
         }
 
-        /* Styles pour les sections de quiz (questions) */
+        /* Progress Bar */
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 25px;
+            overflow: hidden; /* Pour que la barre de progression reste à l'intérieur */
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary-color);
+            border-radius: 10px;
+            transition: width 0.5s ease-in-out;
+        }
+
+        /* Quiz Sections */
         .quiz-section {
             text-align: left;
-            margin-bottom: 25px; /* Ajuste la marge */
-            padding: 15px; /* Réduit le padding */
-            border-radius: 10px;
-            background-color: #fdfdfd;
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 15px; /* Plus arrondi */
+            background-color: #fcfcfc;
             border: 1px solid var(--border-color);
-            transition: all 0.3s ease-in-out;
+            transition: all 0.4s ease-in-out; /* Transition plus rapide */
             opacity: 0;
             transform: translateX(20px);
+            position: absolute; /* Pour permettre les animations de slide */
+            width: calc(100% - 30px); /* Ajustement pour le padding */
+            left: 15px;
+            top: auto; /* Laisse le positionnement naturel pour la hauteur */
         }
         .quiz-section.active {
             opacity: 1;
             transform: translateX(0);
-            position: relative;
+            position: relative; /* Reviens à la position normale */
         }
         .quiz-section p {
             font-weight: 600;
-            color: #444;
-            margin-bottom: 15px; /* Ajuste la marge */
-            font-size: 1.05em; /* Ajuste la taille de police */
+            color: var(--text-color);
+            margin-bottom: 20px;
+            font-size: 1.1em;
         }
         .quiz-section label {
             display: flex;
             align-items: center;
-            margin-bottom: 10px; /* Réduit la marge entre les options */
+            margin-bottom: 12px;
             cursor: pointer;
-            padding: 10px 12px; /* Réduit le padding */
-            background-color: #f0f0f0;
+            padding: 12px 15px;
+            background-color: #f5f5f5;
             border: 2px solid transparent;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            border-radius: 10px; /* Plus arrondi */
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Petite ombre */
         }
         .quiz-section label:hover {
-            background-color: #e5e5e5;
+            background-color: #e0e0e0;
             border-color: var(--primary-color);
+            transform: translateY(-2px); /* Léger effet hover */
         }
         .quiz-section input[type="radio"] {
-            margin-right: 12px; /* Réduit la marge */
-            transform: scale(1.2); /* Légèrement plus petit */
+            margin-right: 15px;
+            transform: scale(1.4); /* Agrandir le bouton radio */
             accent-color: var(--primary-color);
+            cursor: pointer;
         }
         .quiz-section input[type="radio"]:checked + span {
             font-weight: 700;
             color: var(--primary-dark);
         }
         .quiz-section input[type="radio"]:checked ~ label {
-            background-color: #e6ffe6;
-            border-color: var(--primary-color);
-            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
+            background-color: #e8f5e9; /* Vert très clair */
+            border-color: var(--primary-dark);
+            box-shadow: 0 4px 10px rgba(76, 175, 80, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        /* Icônes pour les options (exemple Font Awesome, ou émojis) */
+        .option-icon {
+            margin-right: 10px;
+            font-size: 1.2em;
+            color: var(--accent-color); /* Couleur vive pour les icônes */
         }
 
         /* Boutons de navigation */
         .navigation-buttons {
             display: flex;
             justify-content: space-between;
-            margin-top: 25px; /* Ajuste la marge */
+            margin-top: 30px;
         }
         button {
             background-color: var(--primary-color);
             color: white;
-            padding: 10px 20px; /* Ajuste le padding */
+            padding: 12px 25px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px; /* Plus arrondi */
             cursor: pointer;
-            font-size: 1em; /* Ajuste la taille de police */
+            font-size: 1em;
             font-weight: 600;
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            flex-grow: 1; /* Permet aux boutons de prendre plus d'espace */
-            margin: 0 5px; /* Ajoute un petit espace entre les boutons */
+            flex-grow: 1;
+            margin: 0 8px; /* Plus d'espace entre les boutons */
         }
         button:hover {
             background-color: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            transform: translateY(-3px); /* Effet plus prononcé */
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
         }
         button:disabled {
             background-color: #cccccc;
@@ -151,67 +182,88 @@
             box-shadow: none;
         }
         #prevQuestionBtn {
-            background-color: #6c757d;
+            background-color: #90A4AE; /* Gris bleuté */
         }
         #prevQuestionBtn:hover {
-            background-color: #5a6268;
+            background-color: #607D8B;
         }
 
         /* Section du résultat et téléchargement */
         #resultatQuiz {
-            margin-top: 30px; /* Ajuste la marge */
-            padding: 20px; /* Réduit le padding */
-            border-radius: 10px;
-            background-color: #e6ffe6;
+            margin-top: 40px;
+            padding: 30px;
+            border-radius: 15px;
+            background-color: #e8f5e9; /* Vert très clair */
             color: var(--text-color);
-            font-size: 1em; /* Ajuste la taille de police */
+            font-size: 1.05em;
             text-align: left;
             display: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
             animation: fadeIn 0.8s forwards;
         }
         #resultatQuiz h2 {
             color: var(--primary-dark);
-            margin-bottom: 10px; /* Ajuste la marge */
-            font-size: 1.6em; /* Ajuste la taille de police */
+            margin-bottom: 15px;
+            font-size: 1.7em;
         }
         #recapitulatifReponses h3 {
-            font-size: 1.3em;
-            margin-top: 20px;
+            font-size: 1.35em;
+            margin-top: 25px;
             margin-bottom: 15px;
             color: var(--info-color);
+            border-bottom: 2px solid var(--info-color); /* Ligne sous le titre */
+            padding-bottom: 5px;
         }
         .recap-question {
-            margin-bottom: 12px; /* Ajuste la marge */
-            padding: 8px 12px; /* Ajuste le padding */
-            border-left: 4px solid var(--info-color); /* Ajuste la bordure */
+            margin-bottom: 18px;
+            padding: 12px 18px;
+            background-color: #f0f4f7; /* Bleu gris léger */
+            border-left: 6px solid var(--secondary-color); /* Plus épais */
+            border-radius: 8px;
+            transition: transform 0.2s ease;
+        }
+        .recap-question:hover {
+            transform: translateX(5px);
         }
         .recap-question p {
-            font-size: 0.95em; /* Ajuste la taille de police */
+            margin: 0;
+            font-weight: normal;
         }
         .recap-question .score-evaluation {
-            font-size: 0.85em; /* Ajuste la taille de police */
+            font-size: 0.9em;
+            color: #616161;
+            margin-top: 8px;
+            font-style: italic;
         }
 
         #downloadSection {
-            margin-top: 25px; /* Ajuste la marge */
-            padding: 20px; /* Réduit le padding */
-            background-color: #e0f2f7;
-            border: 1px solid #b3e5fc;
-            border-radius: 10px;
+            margin-top: 35px;
+            padding: 30px;
+            background-color: #e3f2fd; /* Bleu très très clair */
+            border: 1px solid #90CAF9;
+            border-radius: 15px;
             text-align: center;
             display: none;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
             animation: fadeIn 0.8s forwards;
         }
         #downloadSection h2 {
             color: var(--secondary-color);
-            margin-bottom: 10px; /* Ajuste la marge */
-            font-size: 1.4em; /* Ajuste la taille de police */
+            margin-bottom: 20px;
+            font-size: 1.7em;
         }
         #downloadPdfBtn {
-            margin-top: 15px; /* Ajuste la marge */
+            margin-top: 20px;
+            background-color: var(--secondary-color);
+        }
+        #downloadPdfBtn:hover {
+            background-color: #42A5F5;
         }
         .error-message {
+            color: var(--error-color);
+            margin-top: 15px;
+            font-weight: 600;
+            display: none;
             font-size: 0.95em;
         }
 
@@ -221,52 +273,28 @@
                 padding: 20px;
             }
             .container {
-                padding: 40px;
+                padding: 50px;
             }
             h1 {
-                font-size: 2.2em;
-            }
-            .intro-text {
-                font-size: 1.1em;
-                margin-bottom: 30px;
-            }
-            .quiz-section {
-                padding: 20px;
-                margin-bottom: 30px;
+                font-size: 2.5em;
             }
             .quiz-section p {
-                font-size: 1.15em;
-                margin-bottom: 18px;
+                font-size: 1.2em;
             }
             .quiz-section label {
-                padding: 12px 15px;
-                margin-bottom: 12px;
+                padding: 15px 20px;
             }
             .quiz-section input[type="radio"] {
-                margin-right: 15px;
-                transform: scale(1.3);
+                transform: scale(1.5);
             }
             button {
-                padding: 12px 25px;
-                font-size: 1.1em;
-            }
-            #resultatQuiz {
-                padding: 30px;
                 font-size: 1.1em;
             }
             #resultatQuiz h2 {
-                font-size: 1.8em;
-                margin-bottom: 15px;
+                font-size: 2em;
             }
             #recapitulatifReponses h3 {
-                font-size: 1.4em;
-                margin-top: 25px;
-                margin-bottom: 18px;
-            }
-            .recap-question {
-                margin-bottom: 15px;
-                padding: 10px 15px;
-                border-left-width: 5px;
+                font-size: 1.5em;
             }
             .recap-question p {
                 font-size: 1em;
@@ -274,98 +302,99 @@
             .recap-question .score-evaluation {
                 font-size: 0.9em;
             }
-            #downloadSection {
-                padding: 25px;
-            }
             #downloadSection h2 {
-                font-size: 1.6em;
+                font-size: 1.8em;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>QUIZ : Est-ce que ton alimentation bloque ta perte de poids (sans que tu t’en rendes compte) ?</h1>
+        <h1>Découvre les Secrets de ta Perte de Poids !</h1>
+
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
 
         <form id="quizForm">
             <div class="quiz-section active" data-question-id="1">
                 <p>1. Sautes-tu un repas dans la journée ?</p>
-                <label><input type="radio" name="q1" value="A"> <span>A. Oui, souvent le petit-déj</span></label>
-                <label><input type="radio" name="q1" value="B"> <span>B. Oui, souvent le déjeuner (midi)</span></label>
-                <label><input type="radio" name="q1" value="C"> <span>C. Non, je mange 3 repas par jour</span></label>
-                <label><input type="radio" name="q1" value="D"> <span>D. Je mange à des horaires irréguliers</span></label>
+                <label><input type="radio" name="q1" value="A"> <span class="option-icon">🍽️</span> <span>A. Oui, souvent le petit-déj</span></label>
+                <label><input type="radio" name="q1" value="B"> <span class="option-icon">⏰</span> <span>B. Oui, souvent le déjeuner (midi)</span></label>
+                <label><input type="radio" name="q1" value="C"> <span class="option-icon">✅</span> <span>C. Non, je mange 3 repas par jour</span></label>
+                <label><input type="radio" name="q1" value="D"> <span class="option-icon">🤔</span> <span>D. Je mange à des horaires irréguliers</span></label>
             </div>
 
             <div class="quiz-section" data-question-id="2">
                 <p>2. Le midi, tu manges plutôt :</p>
-                <label><input type="radio" name="q2" value="A"> <span>A. Un plat tout prêt, ou sur le pouce</span></label>
-                <label><input type="radio" name="q2" value="B"> <span>B. Un vrai repas complet et équilibré</span></label>
-                <label><input type="radio" name="q2" value="C"> <span>C. Une salade ou une soupe légère</span></label>
-                <label><input type="radio" name="q2" value="D"> <span>D. Je saute ce repas par manque de temps ou d’appétit</span></label>
+                <label><input type="radio" name="q2" value="A"> <span class="option-icon">🥡</span> <span>A. Un plat tout prêt, ou sur le pouce</span></label>
+                <label><input type="radio" name="q2" value="B"> <span class="option-icon">🥗</span> <span>B. Un vrai repas complet et équilibré</span></label>
+                <label><input type="radio" name="q2" value="C"> <span class="option-icon">🥣</span> <span>C. Une salade ou une soupe légère</span></label>
+                <label><input type="radio" name="q2" value="D"> <span class="option-icon">💨</span> <span>D. Je saute ce repas par manque de temps ou d’appétit</span></label>
             </div>
 
             <div class="quiz-section" data-question-id="3">
                 <p>3. Ton sommeil : tu dors en moyenne…</p>
-                <label><input type="radio" name="q3" value="A"> <span>A. Moins de 5h par nuit</span></label>
-                <label><input type="radio" name="q3" value="B"> <span>B. Entre 5h et 6h</span></label>
-                <label><input type="radio" name="q3" value="C"> <span>C. Entre 7h et 8h</span></label>
-                <label><input type="radio" name="q3" value="D"> <span>D. 9h ou plus</span></label>
+                <label><input type="radio" name="q3" value="A"> <span class="option-icon">😴</span> <span>A. Moins de 5h par nuit</span></label>
+                <label><input type="radio" name="q3" value="B"> <span class="option-icon">🌙</span> <span>B. Entre 5h et 6h</span></label>
+                <label><input type="radio" name="q3" value="C"> <span class="option-icon">🛌</span> <span>C. Entre 7h et 8h</span></label>
+                <label><input type="radio" name="q3" value="D"> <span class="option-icon">💤</span> <span>D. 9h ou plus</span></label>
             </div>
 
             <div class="quiz-section" data-question-id="4">
                 <p>4. Ton dîner, c’est souvent :</p>
-                <label><input type="radio" name="q4" value="A"> <span>A. Un plat plaisir (raclette, pizza, burger maison…)</span></label>
-                <label><input type="radio" name="q4" value="B"> <span>B. Un repas équilibré (protéines, légumes, un peu de féculents)</span></label>
-                <label><input type="radio" name="q4" value="C"> <span>C. Une soupe + yaourt ou fruit</span></label>
-                <label><input type="radio" name="q4" value="D"> <span>D. Je mange devant la télé sans trop me rappeler quoi</span></label>
+                <label><input type="radio" name="q4" value="A"> <span class="option-icon">🍕</span> <span>A. Un plat plaisir (raclette, pizza, burger maison…)</span></label>
+                <label><input type="radio" name="q4" value="B"> <span class="option-icon">🥕🥩</span> <span>B. Un repas équilibré (protéines, légumes, un peu de féculents)</span></label>
+                <label><input type="radio" name="q4" value="C"> <span class="option-icon">🍵</span> <span>C. Une soupe + yaourt ou fruit</span></label>
+                <label><input type="radio" name="q4" value="D"> <span class="option-icon">📺</span> <span>D. Je mange devant la télé sans trop me rappeler quoi</span></label>
             </div>
 
             <div class="quiz-section" data-question-id="5">
                 <p>5. Combien de fois par semaine manges-tu des pizzas, burgers ou fast-food ?</p>
-                <label><input type="radio" name="q5" value="A"> <span>A. 3 fois ou plus</span></label>
-                <label><input type="radio" name="q5" value="B"> <span>B. 1 à 2 fois</span></label>
-                <label><input type="radio" name="q5" value="C"> <span>C. Rarement, une fois de temps en temps</span></label>
-                <label><input type="radio" name="q5" value="D"> <span>D. Jamais, j’évite complètement</span></label>
+                <label><input type="radio" name="q5" value="A"> <span class="option-icon">🍔🍟</span> <span>A. 3 fois ou plus</span></label>
+                <label><input type="radio" name="q5" value="B"> <span class="option-icon">🤔</span> <span>B. 1 à 2 fois</span></label>
+                <label><input type="radio" name="q5" value="C"> <span class="option-icon"> infrequent</span> <span>C. Rarement, une fois de temps en temps</span></label>
+                <label><input type="radio" name="q5" value="D"> <span class="option-icon">🚫</span> <span>D. Jamais, j’évite complètement</span></label>
             </div>
 
             <div class="quiz-section" data-question-id="6">
                 <p>6. Manges-tu souvent devant un écran ?</p>
-                <label><input type="radio" name="q6" value="A"> <span>A. Toujours devant la télé</span></label>
-                <label><input type="radio" name="q6" value="B"> <span>B. Souvent devant mon téléphone</span></label>
-                <label><input type="radio" name="q6" value="C"> <span>C. Parfois, mais j’essaie de faire attention</span></label>
-                <label><input type="radio" name="q6" value="D"> <span>D. Non, je mange à table sans distraction</span></label>
+                <label><input type="radio" name="q6" value="A"> <span class="option-icon">📺</span> <span>A. Toujours devant la télé</span></label>
+                <label><input type="radio" name="q6" value="B"> <span class="option-icon">📱</span> <span>B. Souvent devant mon téléphone</span></label>
+                <label><input type="radio" name="q6" value="C"> <span class="option-icon">🤷‍♀️</span> <span>C. Parfois, mais j’essaie de faire attention</span></label>
+                <label><input type="radio" name="q6" value="D"> <span class="option-icon">🧘‍♀️</span> <span>D. Non, je mange à table sans distraction</span></label>
             </div>
 
             <div class="quiz-section" data-question-id="7">
                 <p>7. Après tes repas, tu te sens :</p>
-                <label><input type="radio" name="q7" value="A"> <span>A. Fatiguée ou ballonnée</span></label>
-                <label><input type="radio" name="q7" value="B"> <span>B. Encore un peu affamée</span></label>
-                <label><input type="radio" name="q7" value="C"> <span>C. Satisfaite et rassasiée</span></label>
-                <label><input type="radio" name="q7" value="D"> <span>D. Prête à grignoter ou chercher un dessert</span></label>
+                <label><input type="radio" name="q7" value="A"> <span class="option-icon">🤢</span> <span>A. Fatiguée ou ballonnée</span></label>
+                <label><input type="radio" name="q7" value="B"> <span class="option-icon"> cravings</span> <span>B. Encore un peu affamée</span></label>
+                <label><input type="radio" name="q7" value="C"> <span class="option-icon">😊</span> <span>C. Satisfaite et rassasiée</span></label>
+                <label><input type="radio" name="q7" value="D"> <span class="option-icon">🍰</span> <span>D. Prête à grignoter ou chercher un dessert</span></label>
             </div>
 
             <div class="quiz-section" data-question-id="8">
                 <p>8. Tes apports en protéines, tu dirais que…</p>
-                <label><input type="radio" name="q8" value="A"> <span>A. J’en mange trop peu ou pas à chaque repas</span></label>
-                <label><input type="radio" name="q8" value="B"> <span>B. Je n’ai aucune idée de combien il m’en faut</span></label>
-                <label><input type="radio" name="q8" value="C"> <span>C. Je fais attention à en avoir à chaque repas (25–30g midi/soir)</span></label>
-                <label><input type="radio" name="q8" value="D"> <span>D. Je suis végé/végan mais sans suivi précis</span></label>
+                <label><input type="radio" name="q8" value="A"> <span class="option-icon">🥩⬇️</span> <span>A. J’en mange trop peu ou pas à chaque repas</span></label>
+                <label><input type="radio" name="q8" value="B"> <span class="option-icon">🤷‍♀️</span> <span>B. Je n’ai aucune idée de combien il m’en faut</span></label>
+                <label><input type="radio" name="q8" value="C"> <span class="option-icon">💪</span> <span>C. Je fais attention à en avoir à chaque repas (25–30g midi/soir)</span></label>
+                <label><input type="radio" name="q8" value="D"> <span class="option-icon">🌿❓</span> <span>D. Je suis végé/végan mais sans suivi précis</span></label>
             </div>
 
             <div class="quiz-section" data-question-id="9">
                 <p>9. Dans tes repas principaux, il y a souvent des féculents ?</p>
-                <label><input type="radio" name="q9" value="A"> <span>A. Dans les deux repas (pâtes, riz, pain…)</span></label>
-                <label><input type="radio" name="q9" value="B"> <span>B. Au moins une fois par jour</span></label>
-                <label><input type="radio" name="q9" value="C"> <span>C. Très peu, je privilégie légumes et protéines</span></label>
-                <label><input type="radio" name="q9" value="D"> <span>D. Je ne fais pas attention</span></label>
+                <label><input type="radio" name="q9" value="A"> <span class="option-icon">🍚🥖</span> <span>A. Dans les deux repas (pâtes, riz, pain…)</span></label>
+                <label><input type="radio" name="q9" value="B"> <span class="option-icon">🍝</span> <span>B. Au moins une fois par jour</span></label>
+                <label><input type="radio" name="q9" value="C"> <span class="option-icon">🥦🥩</span> <span>C. Très peu, je privilégie légumes et protéines</span></label>
+                <label><input type="radio" name="q9" value="D"> <span class="option-icon">🤷‍♀️</span> <span>D. Je ne fais pas attention</span></label>
             </div>
 
             <div class="quiz-section" data-question-id="10">
                 <p>10. Combien de pas fais-tu en moyenne chaque jour ?</p>
-                <label><input type="radio" name="q10" value="A"> <span>A. Moins de 5000</span></label>
-                <label><input type="radio" name="q10" value="B"> <span>B. Entre 5000 et 7000</span></label>
-                <label><input type="radio" name="q10" value="C"> <span>C. Entre 7000 et 10 000</span></label>
-                <label><input type="radio" name="q10" value="D"> <span>D. Plus de 10 000</span></label>
+                <label><input type="radio" name="q10" value="A"> <span class="option-icon">🚶‍♀️⬇️</span> <span>A. Moins de 5000</span></label>
+                <label><input type="radio" name="q10" value="B"> <span class="option-icon">🚶‍♀️💨</span> <span>B. Entre 5000 et 7000</span></label>
+                <label><input type="radio" name="q10" value="C"> <span class="option-icon">🏃‍♀️</span> <span>C. Entre 7000 et 10 000</span></label>
+                <label><input type="radio" name="q10" value="D"> <span class="option-icon">🚀</span> <span>D. Plus de 10 000</span></label>
             </div>
 
             <p class="error-message" id="errorMessage">Veuillez sélectionner une réponse pour continuer.</p>
@@ -401,6 +430,7 @@
         const recapitulatifReponsesDiv = document.getElementById('recapitulatifReponses');
         const diagnosticTextElement = document.getElementById('diagnosticText');
         const downloadSectionDiv = document.getElementById('downloadSection');
+        const progressBar = document.getElementById('progressBar');
 
         let currentQuestionIndex = 0;
         const totalQuestions = quizSections.length;
@@ -501,19 +531,47 @@
         };
 
         // Fonction pour afficher une question spécifique
-        function showQuestion(index) {
-            quizSections.forEach((section, idx) => {
-                section.classList.remove('active');
-                section.style.display = 'none'; // Cacher toutes les questions
-            });
-            quizSections[index].classList.add('active');
-            quizSections[index].style.display = 'block'; // Afficher la question active
+        function showQuestion(index, direction = 'next') {
+            // Mise à jour de la barre de progression
+            const progress = ((index + 1) / totalQuestions) * 100;
+            progressBar.style.width = `${progress}%`;
+
+            if (index < 0 || index >= totalQuestions) return; // Sécurité
+
+            const currentActive = document.querySelector('.quiz-section.active');
+            const nextQuestion = quizSections[index];
+
+            if (currentActive) {
+                // Animer la sortie de la question actuelle
+                currentActive.style.opacity = 0;
+                currentActive.style.transform = `translateX(${direction === 'next' ? '-20px' : '20px'})`;
+                currentActive.classList.remove('active');
+                
+                // Attendre la fin de l'animation de sortie avant d'animer l'entrée
+                setTimeout(() => {
+                    currentActive.style.display = 'none'; // Cacher l'ancienne question
+                    nextQuestion.style.display = 'block'; // Afficher la nouvelle question
+                    setTimeout(() => {
+                        nextQuestion.style.opacity = 1;
+                        nextQuestion.style.transform = 'translateX(0)';
+                        nextQuestion.classList.add('active');
+                    }, 50); // Petit délai pour que l'opacité s'applique après le display block
+                }, 300); // Durée de l'animation de sortie
+            } else {
+                // Pour la première question (pas d'animation de sortie)
+                nextQuestion.style.display = 'block';
+                setTimeout(() => {
+                    nextQuestion.style.opacity = 1;
+                    nextQuestion.style.transform = 'translateX(0)';
+                    nextQuestion.classList.add('active');
+                }, 50);
+            }
 
             // Mettre à jour la visibilité des boutons
             prevBtn.style.display = index === 0 ? 'none' : 'block';
             submitBtn.style.display = index === totalQuestions - 1 ? 'block' : 'none';
 
-            errorMessage.style.display = 'none'; // Cacher le message d'erreur à chaque changement de question
+            errorMessage.style.display = 'none';
         }
 
         // Écouteur d'événements pour toutes les options radio
@@ -521,20 +579,18 @@
             radio.addEventListener('change', (event) => {
                 const questionName = event.target.name;
                 const selectedValue = event.target.value;
-                userAnswers[questionName] = selectedValue; // Stocker la réponse
+                userAnswers[questionName] = selectedValue;
 
-                errorMessage.style.display = 'none'; // Cacher l'erreur dès qu'une sélection est faite
+                errorMessage.style.display = 'none';
 
-                // On avance à la question suivante après un court délai pour que l'utilisateur voie son choix stylisé
                 setTimeout(() => {
                     if (currentQuestionIndex < totalQuestions - 1) {
                         currentQuestionIndex++;
-                        showQuestion(currentQuestionIndex);
+                        showQuestion(currentQuestionIndex, 'next');
                     } else {
-                        // Si c'est la dernière question, valider le quiz
                         calculerDiagnostic();
                     }
-                }, 400); // Délai de 400 millisecondes (0.4 seconde)
+                }, 400); // Délai pour l'animation de sélection
             });
         });
 
@@ -542,11 +598,11 @@
         prevBtn.addEventListener('click', () => {
             if (currentQuestionIndex > 0) {
                 currentQuestionIndex--;
-                showQuestion(currentQuestionIndex);
+                showQuestion(currentQuestionIndex, 'prev');
             }
         });
 
-        // Gérer le bouton de soumission du quiz (pour la dernière question, si on n'a pas encore répondu)
+        // Gérer le bouton de soumission du quiz
         submitBtn.addEventListener('click', () => {
             const currentQuestionName = `q${currentQuestionIndex + 1}`;
             const selectedOption = document.querySelector(`input[name="${currentQuestionName}"]:checked`);
@@ -563,7 +619,7 @@
         function calculerDiagnostic() {
             let totalScore = 0;
             let recapHTML = '';
-            let problematicAreas = []; // Pour collecter les domaines à améliorer
+            let problematicAreas = [];
 
             for (let i = 1; i <= totalQuestions; i++) {
                 const questionName = `q${i}`;
@@ -581,24 +637,20 @@
                 const comment = optionData.comment;
 
                 totalScore += score;
-                if (score > 0) { // Si le score est > 0, c'est une zone à améliorer
+                if (score > 0) {
                     problematicAreas.push(comment);
                 }
 
-                // Construction du HTML pour le récapitulatif
                 recapHTML += `
                     <div class="recap-question">
                         <p><strong>${i}. ${questionData.text}</strong></p>
-                        <p>Ta réponse : ${optionData.label}</p>
-                        <p class="score-evaluation">Ton diagnostic sur cette réponse : ${comment}</p>
+                        <p>Ta réponse : ${optionData.label.substring(3)}</p> <p class="score-evaluation">Ton diagnostic sur cette réponse : <em>${comment}</em></p>
                     </div>
                 `;
             }
 
-            // Afficher le récapitulatif
             recapitulatifReponsesDiv.innerHTML = recapHTML;
 
-            // Déterminer le diagnostic introductif en fonction du score total
             let diagnosticIntroText = "";
             let detailedBilanText = "<h3>Bilan détaillé et pistes d'amélioration :</h3>";
 
@@ -631,9 +683,11 @@
             diagnosticIntroElement.textContent = diagnosticIntroText;
             diagnosticTextElement.innerHTML = detailedBilanText;
 
+            // Cacher la barre de progression une fois le quiz terminé
+            document.querySelector('.progress-bar-container').style.display = 'none';
+
             resultatQuizDiv.style.display = 'block';
             downloadSectionDiv.style.display = 'block';
-
             document.getElementById('quizForm').style.display = 'none';
         }
 
