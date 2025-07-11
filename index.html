@@ -560,39 +560,517 @@
             } else {
                 // Pour la première question (pas d'animation de sortie)
                 nextQuestion.style.display = 'block';
-                setTimeout(() => {
-                    nextQuestion.style.opacity = 1;
-                    nextQuestion.style.transform = 'translateX(0)';
-                    nextQuestion.classList.add('active');
-                }, 50);
+                <!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Diagnostic Perte de Poids</title>
+    <style>
+        /* Styles Généraux */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+        #quizContainer {
+            max-width: 800px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden; /* Important pour les animations de questions */
+        }
+
+        /* Barre de Progression */
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            height: 10px;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #28a745; /* Vert pour la progression */
+            border-radius: 5px;
+            transition: width 0.4s ease-in-out;
+        }
+
+        /* Questions et Options */
+        .question-wrapper {
+            position: relative;
+            height: 250px; /* Hauteur suffisante pour contenir les questions */
+            overflow: hidden;
+        }
+        .question-container {
+            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+            position: absolute;
+            width: calc(100% - 60px); /* 100% - padding du quizContainer */
+            padding: 0; /* Pas de padding ici, il est sur le quizContainer */
+            left: 0;
+            top: 0;
+            opacity: 0;
+            transform: translateX(100%);
+            pointer-events: none; /* Désactiver les événements de souris par défaut */
+        }
+        .question-container.active {
+            opacity: 1;
+            transform: translateX(0);
+            position: relative; /* Réactiver la position normale */
+            pointer-events: auto; /* Réactiver les événements de souris */
+        }
+        .question-container.prev {
+            transform: translateX(-100%);
+        }
+        .question-container h2 {
+            color: #0056b3;
+            margin-bottom: 20px;
+        }
+        .options label {
+            display: block;
+            background: #e9e9e9;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .options label:hover {
+            background-color: #dcdcdc;
+        }
+        .options input[type="radio"] {
+            margin-right: 10px;
+            accent-color: #007bff; /* Couleur de la coche */
+        }
+        .options input[type="radio"]:checked + span {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        /* Boutons de Navigation */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 10px;
+        }
+        .navigation-buttons button,
+        .result-actions button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s;
+            flex-grow: 1; /* Permet aux boutons de grandir */
+            text-align: center;
+        }
+        .navigation-buttons button:hover,
+        .result-actions button:hover {
+            transform: translateY(-2px);
+        }
+        #prevBtn {
+            background-color: #6c757d; /* Gris */
+            color: white;
+        }
+        #prevBtn:hover {
+            background-color: #5a6268;
+        }
+        #submitBtn {
+            background-color: #007bff; /* Bleu */
+            color: white;
+        }
+        #submitBtn:hover {
+            background-color: #0056b3;
+        }
+        #errorMessage {
+            color: #dc3545; /* Rouge */
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        /* Section des Résultats */
+        #resultatQuizDiv {
+            display: none; /* Masqué par défaut */
+            padding: 30px;
+            text-align: center;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        #resultatQuizDiv h2 {
+            color: #28a745; /* Vert */
+            margin-bottom: 20px;
+        }
+        #resultatQuizDiv h3 {
+            color: #0056b3; /* Bleu */
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        #resultatQuizDiv p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+            text-align: left; /* Aligner le texte à gauche pour une meilleure lisibilité */
+        }
+        #resultatQuizDiv ul {
+            text-align: left;
+            margin: 0 auto;
+            padding-left: 20px;
+            max-width: 600px;
+            list-style: disc; /* Puces pour la liste */
+        }
+        #resultatQuizDiv li {
+            margin-bottom: 8px;
+        }
+
+        /* Boutons d'Action des Résultats */
+        .result-actions {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column; /* Pour empiler les boutons */
+            gap: 15px; /* Espace entre les boutons */
+            align-items: center; /* Centrer les boutons */
+        }
+        #downloadPdfBtn, #metabolicCalculatorBtn {
+            background-color: #28a745; /* Vert */
+            color: white;
+            width: 80%; /* Pour que les boutons soient de taille similaire */
+            max-width: 350px; /* Limiter leur largeur maximale */
+        }
+        #downloadPdfBtn:hover, #metabolicCalculatorBtn:hover {
+            background-color: #218838;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="quizContainer">
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <form id="quizForm">
+            <div class="question-wrapper" id="questionWrapper">
+                </div>
+
+            <div class="navigation-buttons">
+                <button type="button" id="prevBtn" style="display: none;">Précédent</button>
+                <button type="button" id="submitBtn" style="display: none;">Valider le diagnostic</button>
+            </div>
+            <p id="errorMessage" style="display: none;"></p>
+        </form>
+
+        <div id="resultatQuizDiv" style="display: none;">
+            <h2>Ton diagnostic personnalisé</h2>
+            <p id="diagnosticIntroElement"></p>
+            <div id="diagnosticTextElement"></div>
+
+            <div class="result-actions" id="downloadSectionDiv" style="display: none;">
+                <button id="downloadPdfBtn">Télécharger mon plan personnel</button>
+                <button id="metabolicCalculatorBtn">Accéder au calculateur métabolique</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DONNÉES DU QUIZ ---
+        const questionsData = {
+            q1: {
+                text: "Combien de repas principaux consommes-tu par jour ?",
+                options: {
+                    "option1": { label: "a) 3 repas équilibrés", score: 0, comment: "Ton rythme de repas est idéal pour maintenir un bon métabolisme." },
+                    "option2": { label: "b) Moins de 3 repas", score: 5, comment: "Sauter des repas peut ralentir ton métabolisme et provoquer des fringales. Essaye de structurer tes prises alimentaires." },
+                    "option3": { label: "c) Plus de 3 repas (avec grignotages)", score: 10, comment: "Les grignotages fréquents, même sains, peuvent empêcher ton corps de puiser dans ses réserves. Réduis la fréquence de tes repas." }
+                }
+            },
+            q2: {
+                text: "Quel type de boisson consommes-tu le plus souvent ?",
+                options: {
+                    "option1": { label: "a) De l'eau principalement", score: 0, comment: "L'eau est essentielle et n'apporte aucune calorie. Excellent choix pour l'hydratation !" },
+                    "option2": { label: "b) Jus de fruits, sodas, boissons sucrées", score: 8, comment: "Les boissons sucrées sont une source cachée de calories et de sucre. Remplace-les par de l'eau ou des infusions non sucrées." },
+                    "option3": { label: "c) Boissons chaudes avec sucre/lait", score: 4, comment: "Les calories liquides peuvent s'accumuler. Pense à réduire le sucre et le lait dans tes boissons chaudes." }
+                }
+            },
+            q3: {
+                text: "Quelle est ta principale source de protéines à tes repas ?",
+                options: {
+                    "option1": { label: "a) Viandes maigres, poisson, œufs, légumineuses", score: 0, comment: "Bonne variété de protéines, essentielles pour la satiété et la masse musculaire." },
+                    "option2": { label: "b) Principalement des viandes rouges grasses ou charcuteries", score: 6, comment: "Privilégie les protéines maigres pour un meilleur équilibre nutritionnel et une réduction des graisses saturées." },
+                    "option3": { label: "c) Je n'en consomme pas assez ou je ne sais pas", score: 7, comment: "Un apport insuffisant en protéines peut entraîner une perte musculaire et un manque de satiété. Augmente ta consommation." }
+                }
+            },
+             q4: {
+                text: "Comment gères-tu les féculents (pâtes, riz, pain, pommes de terre) dans ton alimentation ?",
+                options: {
+                    "option1": { label: "a) En quantité modérée, de préférence complets", score: 0, comment: "Excellente gestion des glucides complexes. Les féculents complets sont riches en fibres." },
+                    "option2": { label: "b) J'en mange en grande quantité à chaque repas", score: 7, comment: "Une consommation excessive de féculents peut freiner la perte de poids. Adapte les quantités à ton activité physique." },
+                    "option3": { label: "c) Je les supprime totalement de mon alimentation", score: 5, comment: "Supprimer totalement les féculents peut entraîner des carences et des fringales. Une consommation équilibrée est préférable." }
+                }
+            },
+            q5: {
+                text: "Manges-tu des fruits et légumes à chaque repas ?",
+                options: {
+                    "option1": { label: "a) Oui, à chaque repas et en collation", score: 0, comment: "Très bon apport en fibres, vitamines et minéraux, essentiels pour la satiété et la santé." },
+                    "option2": { label: "b) Occasionnellement, quand j'y pense", score: 5, comment: "Augmente ta consommation de fruits et légumes. Ils t'aideront à te sentir rassasié(e) et apporteront des nutriments essentiels." },
+                    "option3": { label: "c) Rarement ou pas du tout", score: 8, comment: "Manque important de fibres et de nutriments essentiels. Cela peut expliquer des fringales et un transit difficile. Fais-en une priorité." }
+                }
+            },
+            q6: {
+                text: "Comment gères-tu le stress et les émotions dans ton quotidien ?",
+                options: {
+                    "option1": { label: "a) J'ai des techniques de gestion du stress efficaces (sport, méditation...)", score: 0, comment: "Excellente gestion du stress, ce qui minimise le risque de manger émotionnellement." },
+                    "option2": { label: "b) Je mange parfois mes émotions", score: 7, comment: "Manger émotionnellement est un piège courant. Explore des alternatives saines pour gérer tes émotions." },
+                    "option3": { label: "c) Je suis très stressé(e) et je compense souvent par la nourriture", score: 10, comment: "Le stress chronique et l'alimentation émotionnelle sont des obstacles majeurs. Il est crucial d'adresser ces problèmes pour des résultats durables." }
+                }
+            },
+            q7: {
+                text: "Quel est ton niveau d'activité physique ?",
+                options: {
+                    "option1": { label: "a) Je fais du sport régulièrement (3 fois/semaine ou plus)", score: 0, comment: "Très bon niveau d'activité physique, qui contribue activement à la dépense calorique et à la masse musculaire." },
+                    "option2": { label: "b) Je bouge un peu, mais pas de sport organisé", score: 5, comment: "Augmenter ton activité physique (marche, escaliers) peut faire une grande différence. Chaque pas compte !" },
+                    "option3": { label: "c) Je suis majoritairement sédentaire", score: 8, comment: "La sédentarité est un frein majeur. Commence par de petites activités quotidiennes et augmente progressivement. Bouger est essentiel." }
+                }
+            },
+            q8: {
+                text: "Comment est la qualité de ton sommeil ?",
+                options: {
+                    "option1": { label: "a) Je dors bien et suffisamment (7-9h par nuit)", score: 0, comment: "Un sommeil de qualité est crucial pour la régulation des hormones de la faim et la récupération. Parfait !" },
+                    "option2": { label: "b) Mon sommeil est irrégulier ou insuffisant", score: 6, comment: "Un manque de sommeil peut perturber les hormones et augmenter les fringales. Améliore tes habitudes de sommeil." },
+                    "option3": { label: "c) J'ai de gros problèmes de sommeil (insomnies, réveils fréquents)", score: 9, comment: "Des troubles du sommeil importants peuvent fortement impacter ton métabolisme et tes envies de manger. Consulte si besoin." }
+                }
+            },
+            q9: {
+                text: "Consommes-tu des aliments transformés, fast-food, ou plats préparés ?",
+                options: {
+                    "option1": { label: "a) Rarement, je cuisine majoritairement maison", score: 0, comment: "Excellent contrôle sur ton alimentation en privilégiant le fait maison. Moins de sucres cachés et de mauvaises graisses." },
+                    "option2": { label: "b) De temps en temps, par commodité", score: 5, comment: "La consommation occasionnelle est gérable, mais sois conscient(e) des calories et des ingrédients. Privilégie le fait maison." },
+                    "option3": { label: "c) Souvent, ils constituent une part importante de mes repas", score: 10, comment: "Ces aliments sont souvent riches en calories, sucres, sel et mauvaises graisses, et pauvres en nutriments. Réduis-les au maximum." }
+                }
+            },
+            q10: {
+                text: "As-tu tendance à manger devant les écrans (TV, smartphone, ordinateur) ?",
+                options: {
+                    "option1": { label: "a) Non, je mange en pleine conscience", score: 0, comment: "Manger en pleine conscience aide à mieux percevoir la satiété et à apprécier le repas. C'est une habitude précieuse." },
+                    "option2": { label: "b) Parfois, quand je suis pressé(e)", score: 3, comment: "Manger devant les écrans peut te faire manger plus et moins bien. Essaye de te concentrer sur ton repas." },
+                    "option3": { label: "c) Oui, presque toujours", score: 7, comment: "Cette habitude favorise la surconsommation et la mauvaise digestion car tu ne perçois pas bien les signaux de satiété. Mange sans distraction." }
+                }
+            }
+        };
+
+        // --- VARIABLES GLOBALES ---
+        const totalQuestions = Object.keys(questionsData).length;
+        let currentQuestionIndex = 0;
+        let userAnswers = {};
+        let allQuestionsAnswered = false; // Pour suivre si toutes les questions sont répondues
+
+        // --- RÉFÉRENCES AUX ÉLÉMENTS DU DOM ---
+        const quizForm = document.getElementById('quizForm');
+        const questionWrapper = document.getElementById('questionWrapper');
+        const prevBtn = document.getElementById('prevBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const progressBar = document.getElementById('progressBar');
+
+        const resultatQuizDiv = document.getElementById('resultatQuizDiv');
+        const diagnosticIntroElement = document.getElementById('diagnosticIntroElement');
+        const diagnosticTextElement = document.getElementById('diagnosticTextElement');
+        const downloadSectionDiv = document.getElementById('downloadSectionDiv');
+
+        const metabolicCalculatorBtn = document.getElementById('metabolicCalculatorBtn');
+
+
+        // --- FONCTIONS DU QUIZ ---
+
+        /**
+         * Met à jour la largeur de la barre de progression.
+         */
+        function updateProgressBar() {
+            const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        /**
+         * Affiche la question spécifiée et gère les animations de transition.
+         * @param {number} index - L'index de la question à afficher.
+         * @param {string} direction - La direction de l'animation ('next' ou 'prev').
+         */
+        function showQuestion(index, direction = 'next') {
+            const questionKeys = Object.keys(questionsData);
+
+            if (index < 0 || index >= totalQuestions) {
+                return; // Empêche d'aller hors des limites des questions
             }
 
-            // Mettre à jour la visibilité des boutons
+            const questionData = questionsData[questionKeys[index]];
+            let newQuestionHTML = `
+                <h2>Question ${index + 1}/${totalQuestions}</h2>
+                <p>${questionData.text}</p>
+                <div class="options">
+            `;
+            for (const [optionKey, optionValue] of Object.entries(questionData.options)) {
+                // Vérifie si cette option était déjà sélectionnée par l'utilisateur
+                const isChecked = userAnswers[questionKeys[index]] === optionKey ? 'checked' : '';
+                newQuestionHTML += `
+                    <label>
+                        <input type="radio" name="${questionKeys[index]}" value="${optionKey}" ${isChecked}>
+                        <span>${optionValue.label}</span>
+                    </label>
+                `;
+            }
+            newQuestionHTML += `</div>`;
+
+            const newQuestionDiv = document.createElement('div');
+            newQuestionDiv.classList.add('question-container');
+            newQuestionDiv.innerHTML = newQuestionHTML;
+
+            // Applique la direction initiale pour l'animation
+            if (direction === 'next') {
+                newQuestionDiv.style.transform = 'translateX(100%)';
+            } else { // 'prev'
+                newQuestionDiv.style.transform = 'translateX(-100%)';
+            }
+            newQuestionDiv.style.opacity = 0;
+            questionWrapper.appendChild(newQuestionDiv);
+
+            // Gère l'ancienne question (si elle existe) pour l'animation de sortie
+            const currentQuestions = questionWrapper.querySelectorAll('.question-container');
+            if (currentQuestions.length > 1) {
+                const oldQuestion = currentQuestions[0];
+                oldQuestion.style.transform = direction === 'next' ? 'translateX(-100%)' : 'translateX(100%)';
+                oldQuestion.style.opacity = 0;
+                // Supprime l'ancienne question après la fin de son animation
+                setTimeout(() => {
+                    oldQuestion.remove();
+                }, 400); // Doit correspondre à la durée de transition CSS
+            }
+
+            // Anime la nouvelle question pour qu'elle entre en vue
+            setTimeout(() => {
+                newQuestionDiv.style.opacity = 1;
+                newQuestionDiv.style.transform = 'translateX(0)';
+                newQuestionDiv.classList.add('active');
+            }, 50); // Petit délai pour le rendu initial avant l'animation
+
+            updateProgressBar();
+
+            // Met à jour la visibilité des boutons de navigation
             prevBtn.style.display = index === 0 ? 'none' : 'block';
             submitBtn.style.display = index === totalQuestions - 1 ? 'block' : 'none';
 
             errorMessage.style.display = 'none';
+
+            // Ré-attache les écouteurs d'événements aux nouvelles radios pour assurer qu'ils sont actifs
+            // Retire d'abord pour éviter les écouteurs multiples
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.removeEventListener('change', handleRadioChange);
+                radio.addEventListener('change', handleRadioChange);
+            });
         }
 
-        // Écouteur d'événements pour toutes les options radio
-        document.querySelectorAll('input[type="radio"]').forEach(radio => {
-            radio.addEventListener('change', (event) => {
-                const questionName = event.target.name;
-                const selectedValue = event.target.value;
-                userAnswers[questionName] = selectedValue;
+        /**
+         * Gère le changement d'état d'un bouton radio.
+         * Enregistre la réponse et gère l'avancement automatique.
+         */
+        function handleRadioChange(event) {
+            const questionName = event.target.name;
+            const selectedValue = event.target.value;
+            userAnswers[questionName] = selectedValue;
 
-                errorMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
 
-                setTimeout(() => {
-                    if (currentQuestionIndex < totalQuestions - 1) {
-                        currentQuestionIndex++;
-                        showQuestion(currentQuestionIndex, 'next');
-                    } else {
-                        calculerDiagnostic();
+            // Vérifie si toutes les questions ont été répondues après cette sélection
+            allQuestionsAnswered = Object.keys(userAnswers).length === totalQuestions;
+
+            setTimeout(() => {
+                if (currentQuestionIndex < totalQuestions - 1) {
+                    currentQuestionIndex++;
+                    showQuestion(currentQuestionIndex, 'next');
+                } else {
+                    // Si c'est la dernière question et qu'elle vient d'être répondue,
+                    // et que toutes les autres l'étaient déjà, on peut calculer le diagnostic.
+                    if (allQuestionsAnswered) {
+                         calculerDiagnostic();
                     }
-                }, 400); // Délai pour l'animation de sélection
-            });
-        });
+                    // Si ce n'est pas toutes répondues, le bouton submit le signalera.
+                }
+            }, 400); // Délai pour l'animation de sélection
+        }
+
+
+        /**
+         * Calcule le diagnostic basé sur les réponses de l'utilisateur
+         * et affiche le résultat personnalisé.
+         */
+        function calculerDiagnostic() {
+            let totalScore = 0;
+            let problematicAreas = []; // Contient les commentaires des réponses qui indiquent un point à améliorer
+
+            // Vérifie une dernière fois si toutes les questions ont été répondues
+            allQuestionsAnswered = Object.keys(userAnswers).length === totalQuestions;
+            if (!allQuestionsAnswered) {
+                errorMessage.textContent = "Veuillez répondre à toutes les questions avant de valider le quiz.";
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            for (let i = 1; i <= totalQuestions; i++) {
+                const questionName = `q${i}`;
+                const userAnswer = userAnswers[questionName];
+
+                const questionData = questionsData[questionName];
+                const optionData = questionData.options[userAnswer];
+                const score = optionData.score;
+                const comment = optionData.comment;
+
+                totalScore += score;
+                if (score > 0) { // Si le score est supérieur à 0, c'est une zone à améliorer
+                    problematicAreas.push(comment);
+                }
+            }
+
+            // --- Logique d'analyse et de recommandations améliorée ---
+            let diagnosticIntroText = "";
+            let detailedBilanText = "<h3>Votre Bilan détaillé et les Pistes d'amélioration :</h3>";
+
+            if (totalScore <= 5) {
+                diagnosticIntroText = "Félicitations ! Ton alimentation et tes habitudes de vie sont globalement très bien alignées avec une perte de poids saine. Tu as de solides fondations !";
+                detailedBilanText += "<p>Tes réponses montrent une **excellente compréhension** des principes d'une alimentation saine et d'un mode de vie équilibré. Tu gères bien tes repas, ton sommeil et ton niveau d'activité physique. Pour maintenir ces acquis et continuer à progresser, la **cohérence** sera ta meilleure alliée. N'hésite pas à explorer de nouvelles recettes saines pour **éviter la monotonie** et garder le plaisir de manger sainement. Tu es sur la bonne voie !</p>";
+            } else if (totalScore <= 15) {
+                diagnosticIntroText = "Tu es sur la **très bonne voie** ! Quelques ajustements ciblés peuvent t'aider à optimiser ta perte de poids. Tes habitudes sont globalement bonnes, mais il existe des **marges de progression intéressantes** qui feront une grande différence.";
+                detailedBilanText += "<p>Tes réponses révèlent des **opportunités d'amélioration spécifiques** qui, une fois adressées, feront une grande différence :</p><ul>";
+                detailedBilanText += problematicAreas.map(comment => `<li>${comment}</li>`).join('');
+                detailedBilanText += "</ul><p>En travaillant sur ces aspects, même par **petites étapes**, tu verras rapidement des progrès significatifs. La **régularité** et la **patience** sont essentielles !</p>";
+            } else if (totalScore <= 25) {
+                diagnosticIntroText = "Ton alimentation et tes habitudes de vie présentent **plusieurs points importants** qui pourraient freiner ta perte de poids. Ne t'inquiète pas, c'est le moment idéal pour **prendre conscience** et mettre en place des changements pour des résultats durables !";
+                detailedBilanText += "<p>Il y a des habitudes qui ont un **impact certain** sur ta capacité à perdre du poids. Concentre-toi sur les domaines suivants pour voir un réel changement :</p><ul>";
+                detailedBilanText += problematicAreas.map(comment => `<li>${comment}</li>`).join('');
+                detailedBilanText += "</ul><p>Commence par les **deux ou trois points** qui te semblent les plus faciles à modifier pour commencer à construire une dynamique positive. Chaque petit pas compte et te rapprochera de tes objectifs !</p>";
+            } else {
+                diagnosticIntroText = "Il semblerait que tes habitudes actuelles soient un **obstacle significatif** à ta perte de poids. Mais la bonne nouvelle, c'est que tu as maintenant une **clarté totale** sur les domaines à améliorer. Le changement est à ta portée, et ce quiz est le premier pas vers une transformation !";
+                detailedBilanText += "<p>Tes réponses suggèrent plusieurs **défis importants** qui peuvent bloquer ta perte de poids. Voici les domaines **prioritaires** sur lesquels travailler pour une véritable transformation :</p><ul>";
+                detailedBilanText += problematicAreas.map(comment => `<li>${comment}</li>`).join('');
+                detailedBilanText += "</ul><p>Commence par un ou deux **changements simples mais réguliers** qui te paraissent gérables. L'important est de démarrer et de construire de nouvelles habitudes progressivement. N'hésite pas à te faire accompagner pour ces changements profonds. **Tu as le pouvoir de transformer ta santé et d'atteindre tes objectifs !**</p>";
+            }
+
+            diagnosticIntroElement.textContent = diagnosticIntroText;
+            diagnosticTextElement.innerHTML = detailedBilanText;
+
+            // Cacher la barre de progression une fois le quiz terminé
+            document.querySelector('.progress-bar-container').style.display = 'none';
+
+            // Afficher la section des résultats et les boutons d'action
+            resultatQuizDiv.style.display = 'block';
+            downloadSectionDiv.style.display = 'flex'; // Utilise flex pour empiler les boutons
+            document.getElementById('quizForm').style.display = 'none'; // Cache le formulaire du quiz
+        }
+
+        // --- ÉCOUTEURS D'ÉVÉNEMENTS ---
 
         // Gérer le bouton Précédent
         prevBtn.addEventListener('click', () => {
@@ -604,99 +1082,34 @@
 
         // Gérer le bouton de soumission du quiz
         submitBtn.addEventListener('click', () => {
-            const currentQuestionName = `q${currentQuestionIndex + 1}`;
-            const selectedOption = document.querySelector(`input[name="${currentQuestionName}"]:checked`);
+            // Assurez-vous que toutes les questions ont été répondues
+            allQuestionsAnswered = Object.keys(userAnswers).length === totalQuestions;
 
-            if (!selectedOption) {
-                errorMessage.textContent = "Veuillez sélectionner une réponse pour valider le quiz.";
+            if (!allQuestionsAnswered) {
+                errorMessage.textContent = "Veuillez répondre à toutes les questions avant de valider le quiz.";
                 errorMessage.style.display = 'block';
                 return;
             }
             calculerDiagnostic();
         });
 
-        // Fonction de calcul du diagnostic
-        function calculerDiagnostic() {
-            let totalScore = 0;
-            let recapHTML = '';
-            let problematicAreas = [];
-
-            for (let i = 1; i <= totalQuestions; i++) {
-                const questionName = `q${i}`;
-                const userAnswer = userAnswers[questionName];
-
-                if (!userAnswer) {
-                    errorMessage.textContent = "Veuillez répondre à toutes les questions avant de valider.";
-                    errorMessage.style.display = 'block';
-                    return;
-                }
-
-                const questionData = questionsData[questionName];
-                const optionData = questionData.options[userAnswer];
-                const score = optionData.score;
-                const comment = optionData.comment;
-
-                totalScore += score;
-                if (score > 0) {
-                    problematicAreas.push(comment);
-                }
-
-                recapHTML += `
-                    <div class="recap-question">
-                        <p><strong>${i}. ${questionData.text}</strong></p>
-                        <p>Ta réponse : ${optionData.label.substring(3)}</p> <p class="score-evaluation">Ton diagnostic sur cette réponse : <em>${comment}</em></p>
-                    </div>
-                `;
-            }
-
-            recapitulatifReponsesDiv.innerHTML = recapHTML;
-
-            let diagnosticIntroText = "";
-            let detailedBilanText = "<h3>Bilan détaillé et pistes d'amélioration :</h3>";
-
-            if (totalScore <= 5) {
-                diagnosticIntroText = "Félicitations ! Ton alimentation et tes habitudes de vie sont globalement très bien alignées avec une perte de poids saine. Tu as de solides fondations !";
-                detailedBilanText += "<p>Tes réponses montrent une **excellente compréhension** des principes d'une alimentation saine et d'un mode de vie équilibré. Tu gères bien tes repas, ton sommeil et ton niveau d'activité physique. Pour maintenir ces acquis et continuer à progresser, la **cohérence** sera ta meilleure alliée. N'hésite pas à explorer de nouvelles recettes saines pour **éviter la monotonie** et garder le plaisir de manger sainement. Tu es sur la bonne voie !</p>";
-            } else if (totalScore <= 15) {
-                diagnosticIntroText = "Tu es sur la **très bonne voie** ! Quelques ajustements ciblés peuvent t'aider à optimiser ta perte de poids. Tes habitudes sont globalement bonnes, mais il existe des **marges de progression intéressantes** qui feront une grande différence.";
-                detailedBilanText += "<p>Tes réponses révèlent des **opportunités d'amélioration spécifiques**. Voici les points sur lesquels tu peux te concentrer pour débloquer ta perte de poids :</p><ul>";
-                problematicAreas.forEach(comment => {
-                    detailedBilanText += `<li>${comment}</li>`;
-                });
-                detailedBilanText += "</ul><p>En travaillant sur ces aspects, même par **petites étapes**, tu verras rapidement des progrès significatifs. La **régularité** et la **patience** sont essentielles !</p>";
-            } else if (totalScore <= 25) {
-                diagnosticIntroText = "Ton alimentation et tes habitudes de vie présentent **plusieurs points importants** qui pourraient freiner ta perte de poids. Ne t'inquiète pas, c'est le moment idéal pour **prendre conscience** et mettre en place des changements pour des résultats durables !";
-                detailedBilanText += "<p>Il y a des habitudes qui ont un **impact certain** sur ta capacité à perdre du poids. Concentre-toi sur les domaines suivants pour voir un réel changement :</p><ul>";
-                problematicAreas.forEach(comment => {
-                    detailedBilanText += `<li>${comment}</li>`;
-                });
-                detailedBilanText += "</ul><p>Commence par les **deux ou trois points** qui te semblent les plus faciles à modifier pour commencer à construire une dynamique positive. Chaque petit pas compte et te rapprochera de tes objectifs !</p>";
-            } else {
-                diagnosticIntroText = "Il semblerait que tes habitudes actuelles soient un **obstacle significatif** à ta perte de poids. Mais la bonne nouvelle, c'est que tu as maintenant une **clarté totale** sur les domaines à améliorer. Le changement est à ta portée, et ce quiz est le premier pas vers une transformation !";
-                detailedBilanText += "<p>Tes réponses suggèrent plusieurs **défis importants** qui peuvent bloquer ta perte de poids. Voici les domaines **prioritaires** sur lesquels travailler pour une véritable transformation :</p><ul>";
-                problematicAreas.forEach(comment => {
-                    detailedBilanText += `<li>${comment}</li>`;
-                });
-                detailedBilanText += "</ul><p>Commence par un ou deux **changements simples mais réguliers** qui te paraissent gérables. L'important est de démarrer et de construire de nouvelles habitudes progressivement. N'hésite pas à te faire accompagner pour ces changements profonds. **Tu as le pouvoir de transformer ta santé et d'atteindre tes objectifs !**</p>";
-            }
-
-            diagnosticIntroElement.textContent = diagnosticIntroText;
-            diagnosticTextElement.innerHTML = detailedBilanText;
-
-            // Cacher la barre de progression une fois le quiz terminé
-            document.querySelector('.progress-bar-container').style.display = 'none';
-
-            resultatQuizDiv.style.display = 'block';
-            downloadSectionDiv.style.display = 'block';
-            document.getElementById('quizForm').style.display = 'none';
-        }
-
         // Gestion du téléchargement du PDF
         document.getElementById('downloadPdfBtn').onclick = function() {
+            // Ici, vous pouvez intégrer une bibliothèque comme html2pdf.js pour générer un PDF dynamique
+            // Pour l'instant, cela redirige simplement vers un fichier statique
             window.location.href = 'mon_plan_personnel.pdf';
         };
 
-        // Initialisation : afficher la première question au chargement
+        // Gestion du bouton Calculateur Métabolique
+        metabolicCalculatorBtn.onclick = function() {
+            // Redirige l'utilisateur vers la page de votre calculateur métabolique
+            // N'oubliez pas de créer ce fichier !
+            window.location.href = 'calculateur-metabolique.html';
+        };
+
+
+        // --- INITIALISATION ---
+        // Afficher la première question au chargement de la page
         showQuestion(currentQuestionIndex);
     </script>
 </body>
