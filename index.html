@@ -24,7 +24,7 @@
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 15px; /* Réduit le padding général pour les petits écrans */
             background-color: var(--background-light);
             color: var(--text-color);
             line-height: 1.6;
@@ -36,7 +36,7 @@
         }
         .container {
             background-color: #fff;
-            padding: 40px;
+            padding: 30px 20px; /* Ajuste le padding pour les mobiles */
             border-radius: 15px;
             box-shadow: 0 10px 30px var(--shadow-light);
             max-width: 700px;
@@ -57,45 +57,44 @@
         h1 {
             color: var(--primary-dark);
             margin-bottom: 15px;
-            font-size: 2.2em;
+            font-size: 1.8em; /* Plus petit sur mobile */
             font-weight: 700;
         }
         .intro-text {
-            font-size: 1.1em;
+            font-size: 1em; /* Plus petit sur mobile */
             color: #666;
-            margin-bottom: 30px;
-            /* display: none; */ /* Garder pour référence si on veut cacher */
+            margin-bottom: 25px; /* Ajuste la marge */
         }
 
         /* Styles pour les sections de quiz (questions) */
         .quiz-section {
             text-align: left;
-            margin-bottom: 30px;
-            padding: 20px;
+            margin-bottom: 25px; /* Ajuste la marge */
+            padding: 15px; /* Réduit le padding */
             border-radius: 10px;
             background-color: #fdfdfd;
             border: 1px solid var(--border-color);
             transition: all 0.3s ease-in-out;
-            opacity: 0; /* Caché par défaut pour les étapes */
-            transform: translateX(20px); /* Pour l'animation slide-in */
+            opacity: 0;
+            transform: translateX(20px);
         }
         .quiz-section.active {
             opacity: 1;
             transform: translateX(0);
-            position: relative; /* Pour le z-index en cas d'overlap */
+            position: relative;
         }
         .quiz-section p {
             font-weight: 600;
             color: #444;
-            margin-bottom: 18px;
-            font-size: 1.15em;
+            margin-bottom: 15px; /* Ajuste la marge */
+            font-size: 1.05em; /* Ajuste la taille de police */
         }
         .quiz-section label {
-            display: flex; /* Utilisation de flexbox pour aligner radio et texte */
+            display: flex;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px; /* Réduit la marge entre les options */
             cursor: pointer;
-            padding: 12px 15px;
+            padding: 10px 12px; /* Réduit le padding */
             background-color: #f0f0f0;
             border: 2px solid transparent;
             border-radius: 8px;
@@ -106,38 +105,39 @@
             border-color: var(--primary-color);
         }
         .quiz-section input[type="radio"] {
-            margin-right: 15px;
-            transform: scale(1.3); /* Agrandir le bouton radio */
-            accent-color: var(--primary-color); /* Couleur du radio button */
+            margin-right: 12px; /* Réduit la marge */
+            transform: scale(1.2); /* Légèrement plus petit */
+            accent-color: var(--primary-color);
         }
-        .quiz-section input[type="radio"]:checked + span { /* Style pour le texte de l'option sélectionnée */
+        .quiz-section input[type="radio"]:checked + span {
             font-weight: 700;
             color: var(--primary-dark);
         }
-        .quiz-section input[type="radio"]:checked ~ label { /* Style pour la label quand le radio est checké */
-            background-color: #e6ffe6; /* Fond plus clair */
-            border-color: var(--primary-color); /* Bordure colorée */
-            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2); /* Ombre subtile */
+        .quiz-section input[type="radio"]:checked ~ label {
+            background-color: #e6ffe6;
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
         }
 
-
-        /* Boutons de navigation (seulement Précédent et Soumettre resteront visibles) */
+        /* Boutons de navigation */
         .navigation-buttons {
             display: flex;
             justify-content: space-between;
-            margin-top: 30px;
+            margin-top: 25px; /* Ajuste la marge */
         }
         button {
             background-color: var(--primary-color);
             color: white;
-            padding: 12px 25px;
+            padding: 10px 20px; /* Ajuste le padding */
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1.1em;
+            font-size: 1em; /* Ajuste la taille de police */
             font-weight: 600;
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            flex-grow: 1; /* Permet aux boutons de prendre plus d'espace */
+            margin: 0 5px; /* Ajoute un petit espace entre les boutons */
         }
         button:hover {
             background-color: var(--primary-dark);
@@ -151,84 +151,142 @@
             box-shadow: none;
         }
         #prevQuestionBtn {
-            background-color: #6c757d; /* Gris pour précédent */
+            background-color: #6c757d;
         }
         #prevQuestionBtn:hover {
             background-color: #5a6268;
         }
 
-
         /* Section du résultat et téléchargement */
         #resultatQuiz {
-            margin-top: 40px;
-            padding: 30px;
+            margin-top: 30px; /* Ajuste la marge */
+            padding: 20px; /* Réduit le padding */
             border-radius: 10px;
-            background-color: #e6ffe6; /* Fond léger pour le succès */
+            background-color: #e6ffe6;
             color: var(--text-color);
-            font-size: 1.1em;
+            font-size: 1em; /* Ajuste la taille de police */
             text-align: left;
-            display: none; /* Caché par défaut */
+            display: none;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             animation: fadeIn 0.8s forwards;
         }
         #resultatQuiz h2 {
             color: var(--primary-dark);
-            margin-bottom: 15px;
-            font-size: 1.8em;
+            margin-bottom: 10px; /* Ajuste la marge */
+            font-size: 1.6em; /* Ajuste la taille de police */
         }
-        #diagnosticText {
-            margin-bottom: 20px;
+        #recapitulatifReponses h3 {
+            font-size: 1.3em;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            color: var(--info-color);
         }
         .recap-question {
-            margin-bottom: 15px;
-            padding: 10px 15px;
-            background-color: #f8f9fa;
-            border-left: 5px solid var(--info-color);
-            border-radius: 5px;
+            margin-bottom: 12px; /* Ajuste la marge */
+            padding: 8px 12px; /* Ajuste le padding */
+            border-left: 4px solid var(--info-color); /* Ajuste la bordure */
         }
         .recap-question p {
-            margin: 0;
-            font-weight: normal;
+            font-size: 0.95em; /* Ajuste la taille de police */
         }
         .recap-question .score-evaluation {
-            font-size: 0.9em;
-            color: #777;
-            margin-top: 5px;
+            font-size: 0.85em; /* Ajuste la taille de police */
         }
 
         #downloadSection {
-            margin-top: 30px;
-            padding: 25px;
-            background-color: #e0f2f7; /* Bleu clair pour le téléchargement */
+            margin-top: 25px; /* Ajuste la marge */
+            padding: 20px; /* Réduit le padding */
+            background-color: #e0f2f7;
             border: 1px solid #b3e5fc;
             border-radius: 10px;
             text-align: center;
-            display: none; /* Caché par défaut */
+            display: none;
             animation: fadeIn 0.8s forwards;
         }
         #downloadSection h2 {
             color: var(--secondary-color);
-            margin-bottom: 15px;
-            font-size: 1.6em;
+            margin-bottom: 10px; /* Ajuste la marge */
+            font-size: 1.4em; /* Ajuste la taille de police */
         }
         #downloadPdfBtn {
-            background-color: var(--secondary-color); /* Bouton bleu pour le PDF */
-            margin-top: 20px;
-        }
-        #downloadPdfBtn:hover {
-            background-color: #1976D2;
+            margin-top: 15px; /* Ajuste la marge */
         }
         .error-message {
-            color: var(--error-color);
-            margin-top: 15px;
-            font-weight: 600;
-            display: none;
+            font-size: 0.95em;
+        }
+
+        /* MEDIA QUERIES pour les écrans plus grands */
+        @media (min-width: 600px) {
+            body {
+                padding: 20px;
+            }
+            .container {
+                padding: 40px;
+            }
+            h1 {
+                font-size: 2.2em;
+            }
+            .intro-text {
+                font-size: 1.1em;
+                margin-bottom: 30px;
+            }
+            .quiz-section {
+                padding: 20px;
+                margin-bottom: 30px;
+            }
+            .quiz-section p {
+                font-size: 1.15em;
+                margin-bottom: 18px;
+            }
+            .quiz-section label {
+                padding: 12px 15px;
+                margin-bottom: 12px;
+            }
+            .quiz-section input[type="radio"] {
+                margin-right: 15px;
+                transform: scale(1.3);
+            }
+            button {
+                padding: 12px 25px;
+                font-size: 1.1em;
+            }
+            #resultatQuiz {
+                padding: 30px;
+                font-size: 1.1em;
+            }
+            #resultatQuiz h2 {
+                font-size: 1.8em;
+                margin-bottom: 15px;
+            }
+            #recapitulatifReponses h3 {
+                font-size: 1.4em;
+                margin-top: 25px;
+                margin-bottom: 18px;
+            }
+            .recap-question {
+                margin-bottom: 15px;
+                padding: 10px 15px;
+                border-left-width: 5px;
+            }
+            .recap-question p {
+                font-size: 1em;
+            }
+            .recap-question .score-evaluation {
+                font-size: 0.9em;
+            }
+            #downloadSection {
+                padding: 25px;
+            }
+            #downloadSection h2 {
+                font-size: 1.6em;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>QUIZ : Est-ce que ton alimentation bloque ta perte de poids (sans que tu t’en rendes compte) ?</h1>
+
         <form id="quizForm">
             <div class="quiz-section active" data-question-id="1">
                 <p>1. Sautes-tu un repas dans la journée ?</p>
@@ -320,10 +378,12 @@
 
         <div id="resultatQuiz">
             <h2>Ton bilan personnalisé :</h2>
-            <p id="diagnosticIntro"></p> <div id="recapitulatifReponses">
+            <p id="diagnosticIntro"></p>
+            <div id="recapitulatifReponses">
                 <h3>Récapitulatif de tes réponses :</h3>
-                </div>
-            <p id="diagnosticText"></p> </div>
+            </div>
+            <p id="diagnosticText"></p>
+        </div>
 
         <div id="downloadSection">
             <h2>Télécharge maintenant ta liste de courses indispensable pour une perte de poids !</h2>
@@ -351,91 +411,91 @@
             q1: {
                 text: "Sautes-tu un repas dans la journée ?",
                 options: {
-                    A: { label: "Oui, souvent le petit-déj", score: 3, comment: "Sauter le petit-déjeuner peut perturber ton métabolisme." },
-                    B: { label: "Oui, souvent le déjeuner (midi)", score: 3, comment: "Passer le déjeuner peut mener à des grignotages excessifs plus tard." },
-                    C: { label: "Non, je mange 3 repas par jour", score: 0, comment: "C'est une excellente habitude pour maintenir ton énergie et réguler l'appétit." },
-                    D: { label: "Je mange à des horaires irréguliers", score: 2, comment: "Des repas à heures fixes aident à réguler la faim et le système digestif." }
+                    A: { label: "A. Oui, souvent le petit-déj", score: 3, comment: "Sauter le petit-déjeuner peut perturber ton métabolisme et favoriser le grignotage." },
+                    B: { label: "B. Oui, souvent le déjeuner (midi)", score: 3, comment: "Passer le déjeuner peut mener à des baisses d'énergie et des envies de sucre plus tard." },
+                    C: { label: "C. Non, je mange 3 repas par jour", score: 0, comment: "C'est une excellente habitude pour maintenir ton énergie et réguler l'appétit tout au long de la journée." },
+                    D: { label: "D. Je mange à des horaires irréguliers", score: 2, comment: "Des repas à heures fixes aident à réguler la faim, la digestion et à prévenir les pics de glycémie." }
                 }
             },
             q2: {
                 text: "Le midi, tu manges plutôt :",
                 options: {
-                    A: { label: "Un plat tout prêt, ou sur le pouce", score: 3, comment: "Les plats préparés sont souvent riches en sel, sucre et mauvaises graisses." },
-                    B: { label: "Un vrai repas complet et équilibré", score: 0, comment: "Parfait ! Un repas équilibré au déjeuner est la clé d'une bonne énergie et satiété." },
-                    C: { label: "Une salade ou une soupe légère", score: 1, comment: "Bonne intention, mais assure-toi d'avoir assez de protéines et de fibres pour être rassasiée." },
-                    D: { label: "Je saute ce repas par manque de temps ou d’appétit", score: 3, comment: "Sauter un repas n'est pas idéal pour une perte de poids durable." }
+                    A: { label: "A. Un plat tout prêt, ou sur le pouce", score: 3, comment: "Les plats préparés sont souvent riches en sucres cachés, sel et graisses saturées, ce qui nuit à la perte de poids." },
+                    B: { label: "B. Un vrai repas complet et équilibré", score: 0, comment: "Parfait ! Un repas équilibré au déjeuner, riche en protéines et légumes, est la clé d'une bonne énergie et d'une satiété durable." },
+                    C: { label: "C. Une salade ou une soupe légère", score: 1, comment: "Bonne intention, mais assure-toi d'avoir assez de protéines et de bonnes graisses pour être bien rassasié(e) et éviter les fringales." },
+                    D: { label: "D. Je saute ce repas par manque de temps ou d’appétit", score: 3, comment: "Sauter un repas n'est pas idéal pour une perte de poids durable et peut ralentir ton métabolisme." }
                 }
             },
             q3: {
                 text: "Ton sommeil : tu dors en moyenne…",
                 options: {
-                    A: { label: "Moins de 5h par nuit", score: 4, comment: "Un manque de sommeil sévère peut sérieusement dérégler les hormones de la faim." },
-                    B: { label: "Entre 5h et 6h", score: 2, comment: "Un sommeil insuffisant peut augmenter les fringales et le stockage des graisses." },
-                    C: { label: "Entre 7h et 8h", score: 0, comment: "Idéal ! Un sommeil suffisant est fondamental pour la régulation du poids." },
-                    D: { label: "9h ou plus", score: 1, comment: "Trop de sommeil peut parfois aussi être lié à un métabolisme ralenti ou d'autres facteurs." }
+                    A: { label: "A. Moins de 5h par nuit", score: 4, comment: "Un manque de sommeil sévère peut sérieusement dérégler les hormones de la faim (leptine et ghréline), augmentant les fringales et le stockage des graisses." },
+                    B: { label: "B. Entre 5h et 6h", score: 2, comment: "Un sommeil insuffisant peut impacter ton énergie, ta motivation à bouger et tes choix alimentaires." },
+                    C: { label: "C. Entre 7h et 8h", score: 0, comment: "Idéal ! Un sommeil suffisant et réparateur est fondamental pour la régulation du poids, la récupération musculaire et le bien-être général." },
+                    D: { label: "D. 9h ou plus", score: 1, comment: "Trop de sommeil peut parfois aussi être lié à un métabolisme ralenti ou d'autres facteurs. L'important est la qualité du sommeil." }
                 }
             },
             q4: {
                 text: "Ton dîner, c’est souvent :",
                 options: {
-                    A: { label: "Un plat plaisir (raclette, pizza, burger maison…)", score: 3, comment: "Les dîners lourds peuvent perturber la digestion et le sommeil, impactant la perte de poids." },
-                    B: { label: "Un repas équilibré (protéines, légumes, un peu de féculents)", score: 0, comment: "Excellent choix ! Un dîner léger et équilibré favorise une bonne digestion nocturne." },
-                    C: { label: "Une soupe + yaourt ou fruit", score: 1, comment: "C'est léger, mais assure-toi d'avoir suffisamment de protéines pour la satiété." },
-                    D: { label: "Je mange devant la télé sans trop me rappeler quoi", score: 2, comment: "Manger en étant distrait mène souvent à manger plus et à moins apprécier le repas." }
+                    A: { label: "A. Un plat plaisir (raclette, pizza, burger maison…)", score: 3, comment: "Les dîners lourds et riches avant de dormir peuvent perturber la digestion, le sommeil et favoriser le stockage des graisses." },
+                    B: { label: "B. Un repas équilibré (protéines, légumes, un peu de féculents)", score: 0, comment: "Excellent choix ! Un dîner léger, riche en protéines et légumes, favorise une bonne digestion nocturne et aide à la récupération." },
+                    C: { label: "C. Une soupe + yaourt ou fruit", score: 1, comment: "C'est léger, mais assure-toi d'avoir suffisamment de protéines pour ne pas avoir faim avant de dormir ou au réveil." },
+                    D: { label: "D. Je mange devant la télé sans trop me rappeler quoi", score: 2, comment: "Manger en étant distrait devant un écran mène souvent à manger plus et à moins apprécier le repas, sans conscience de la satiété." }
                 }
             },
             q5: {
                 text: "Combien de fois par semaine manges-tu des pizzas, burgers ou fast-food ?",
                 options: {
-                    A: { label: "3 fois ou plus", score: 4, comment: "Ces aliments sont des bombes caloriques qui freinent significativement la perte de poids." },
-                    B: { label: "1 à 2 fois", score: 2, comment: "À consommer avec modération. Ces repas fréquents peuvent compromettre tes objectifs." },
-                    C: { label: "Rarement, une fois de temps en temps", score: 1, comment: "C'est une bonne approche pour se faire plaisir sans excès." },
-                    D: { label: "Jamais, j’évite complètement", score: 0, comment: "Très bien ! Les éviter est un atout majeur pour la perte de poids." }
+                    A: { label: "A. 3 fois ou plus", score: 4, comment: "Ces aliments sont des bombes caloriques, riches en graisses, sucres et additifs, qui freinent significativement la perte de poids. C'est un point clé à modifier." },
+                    B: { label: "B. 1 à 2 fois", score: 2, comment: "À consommer avec modération. Ces repas fréquents peuvent compromettre tes objectifs de perte de poids et ta santé à long terme." },
+                    C: { label: "C. Rarement, une fois de temps en temps", score: 1, comment: "C'est une bonne approche pour se faire plaisir sans excès et maintenir l'équilibre." },
+                    D: { label: "D. Jamais, j’évite complètement", score: 0, comment: "Très bien ! Les éviter est un atout majeur pour la perte de poids et la santé générale." }
                 }
             },
             q6: {
                 text: "Manges-tu souvent devant un écran ?",
                 options: {
-                    A: { label: "Toujours devant la télé", score: 3, comment: "La distraction réduit la conscience de la satiété et peut augmenter l'apport calorique." },
-                    B: { label: "Souvent devant mon téléphone", score: 3, comment: "Comme la télé, le téléphone distrait et nuit à l'écoute de tes signaux de faim." },
-                    C: { label: "Parfois, mais j’essaie de faire attention", score: 1, comment: "Un effort louable, mais la pleine conscience est essentielle pour mieux manger." },
-                    D: { label: "Non, je mange à table sans distraction", score: 0, comment: "Excellent ! Manger en pleine conscience est une habitude clé pour la perte de poids." }
+                    A: { label: "A. Toujours devant la télé", score: 3, comment: "La distraction réduit la conscience de la satiété, ce qui peut t'amener à manger plus que nécessaire." },
+                    B: { label: "B. Souvent devant mon téléphone", score: 3, comment: "Comme la télé, le téléphone distrait et nuit à l'écoute de tes signaux de faim et de satiété." },
+                    C: { label: "C. Parfois, mais j’essaie de faire attention", score: 1, comment: "Un effort louable. Essaye de t'accorder au moins un repas par jour sans distraction pour te reconnecter à tes sensations." },
+                    D: { label: "D. Non, je mange à table sans distraction", score: 0, comment: "Excellent ! Manger en pleine conscience est une habitude clé pour mieux ressentir la satiété et réguler ton alimentation." }
                 }
             },
             q7: {
                 text: "Après tes repas, tu te sens :",
                 options: {
-                    A: { label: "Fatiguée ou ballonnée", score: 3, comment: "Ces sensations peuvent indiquer une mauvaise digestion ou des repas trop lourds/déséquilibrés." },
-                    B: { label: "Encore un peu affamée", score: 2, comment: "Cela suggère un manque de protéines, de fibres ou de volume dans tes repas." },
-                    C: { label: "Satisfaite et rassasiée", score: 0, comment: "Le sentiment idéal ! Tes repas te fournissent ce dont tu as besoin." },
-                    D: { label: "Prête à grignoter ou chercher un dessert", score: 2, comment: "Cela peut signaler un déséquilibre des macronutriments ou une habitude liée au sucre." }
+                    A: { label: "A. Fatiguée ou ballonnée", score: 3, comment: "Ces sensations peuvent indiquer une mauvaise digestion, des repas trop lourds ou un déséquilibre alimentaire." },
+                    B: { label: "B. Encore un peu affamée", score: 2, comment: "Cela suggère un manque de protéines, de fibres ou de volume dans tes repas. Tu pourrais être plus rassasié(e)." },
+                    C: { label: "C. Satisfaite et rassasiée", score: 0, comment: "Le sentiment idéal ! Tes repas te fournissent ce dont tu as besoin sans excès, c'est le signe d'un bon équilibre." },
+                    D: { label: "D. Prête à grignoter ou chercher un dessert", score: 2, comment: "Cela peut signaler un déséquilibre des macronutriments (manque de protéines/fibres) ou une habitude liée au sucre. Fais attention à ces envies." }
                 }
             },
             q8: {
                 text: "Tes apports en protéines, tu dirais que…",
                 options: {
-                    A: { label: "J’en mange trop peu ou pas à chaque repas", score: 3, comment: "Les protéines sont cruciales pour la satiété et le maintien de la masse musculaire." },
-                    B: { label: "Je n’ai aucune idée de combien il m’en faut", score: 2, comment: "Comprendre tes besoins en protéines est un levier important pour la perte de poids." },
-                    C: { label: "Je fais attention à en avoir à chaque repas (25–30g midi/soir)", score: 0, comment: "Parfait ! Une bonne répartition des protéines est essentielle." },
-                    D: { label: "Je suis végé/végan mais sans suivi précis", score: 2, comment: "Il est crucial de bien planifier tes apports pour éviter les carences et rester rassasié.e." }
+                    A: { label: "A. J’en mange trop peu ou pas à chaque repas", score: 3, comment: "Les protéines sont cruciales pour la satiété, la construction musculaire et le métabolisme. Un manque peut entraîner des fringales." },
+                    B: { label: "B. Je n’ai aucune idée de combien il m’en faut", score: 2, comment: "Comprendre tes besoins en protéines est un levier important pour la perte de poids et le maintien de ta masse musculaire." },
+                    C: { label: "C. Je fais attention à en avoir à chaque repas (25–30g midi/soir)", score: 0, comment: "Parfait ! Une bonne répartition des protéines tout au long de la journée est essentielle pour la satiété et un métabolisme actif." },
+                    D: { label: "D. Je suis végé/végan mais sans suivi précis", score: 2, comment: "Si tu suis un régime végétarien/végan, il est crucial de bien planifier tes apports en protéines végétales pour éviter les carences et rester rassasié(e)." }
                 }
             },
             q9: {
                 text: "Dans tes repas principaux, il y a souvent des féculents ?",
                 options: {
-                    A: { label: "Dans les deux repas (pâtes, riz, pain…)", score: 2, comment: "Les féculents ne sont pas mauvais, mais en consommer trop et à tous les repas peut impacter la perte de poids." },
-                    B: { label: "Au moins une fois par jour", score: 1, comment: "Bon équilibre ! Les féculents fournissent de l'énergie, l'important est la quantité et le type." },
-                    C: { label: "Très peu, je privilégie légumes et protéines", score: 0, comment: "Excellente stratégie pour réduire l'apport calorique tout en étant rassasié.e." },
-                    D: { label: "Je ne fais pas attention", score: 2, comment: "La quantité et le type de féculents peuvent avoir un impact majeur sur ta glycémie et ta perte de poids." }
+                    A: { label: "A. Dans les deux repas (pâtes, riz, pain…)", score: 2, comment: "Les féculents fournissent de l'énergie, mais en consommer trop et à tous les repas peut impacter la glycémie et la perte de poids. Privilégie les céréales complètes." },
+                    B: { label: "B. Au moins une fois par jour", score: 1, comment: "Bon équilibre ! L'important est la quantité et le type (privilégie les complexes)." },
+                    C: { label: "C. Très peu, je privilégie légumes et protéines", score: 0, comment: "Excellente stratégie pour réduire l'apport calorique tout en étant rassasié(e) et en favorisant la perte de poids." },
+                    D: { label: "D. Je ne fais pas attention", score: 2, comment: "La quantité et le type de féculents peuvent avoir un impact majeur sur ta glycémie, ton énergie et ta capacité à perdre du poids." }
                 }
             },
             q10: {
-                text: "Combien de pas fais-tu en moyenne chaque jour ?",
+                text: "10. Combien de pas fais-tu en moyenne chaque jour ?",
                 options: {
-                    A: { label: "Moins de 5000", score: 3, comment: "Un faible niveau d'activité physique est un frein majeur à la dépense calorique et à la perte de poids." },
-                    B: { label: "Entre 5000 et 7000", score: 2, comment: "C'est un bon début, mais viser plus haut peut accélérer tes résultats." },
-                    C: { label: "Entre 7000 et 10 000", score: 1, comment: "Très bien ! C'est un bon niveau d'activité quotidienne." },
-                    D: { label: "Plus de 10 000", score: 0, comment: "Fantastique ! L'activité physique est un pilier essentiel de la perte de poids." }
+                    A: { label: "A. Moins de 5000", score: 3, comment: "Un faible niveau d'activité physique est un frein majeur à la dépense calorique et à la perte de poids. Chaque pas compte !" },
+                    B: { label: "B. Entre 5000 et 7000", score: 2, comment: "C'est un bon début, mais viser plus haut (idéalement 7000-10000 pas) peut accélérer tes résultats et améliorer ta santé." },
+                    C: { label: "C. Entre 7000 et 10 000", score: 1, comment: "Très bien ! C'est un bon niveau d'activité quotidienne pour soutenir tes objectifs de perte de poids." },
+                    D: { label: "D. Plus de 10 000", score: 0, comment: "Fantastique ! L'activité physique régulière est un pilier essentiel de la perte de poids et du bien-être général." }
                 }
             }
         };
@@ -503,15 +563,13 @@
         function calculerDiagnostic() {
             let totalScore = 0;
             let recapHTML = '';
-            let detailedComments = [];
+            let problematicAreas = []; // Pour collecter les domaines à améliorer
 
             for (let i = 1; i <= totalQuestions; i++) {
                 const questionName = `q${i}`;
                 const userAnswer = userAnswers[questionName];
 
                 if (!userAnswer) {
-                    // Cette partie ne devrait normalement plus être atteinte si la validation par étape fonctionne bien
-                    // Mais elle reste une sécurité.
                     errorMessage.textContent = "Veuillez répondre à toutes les questions avant de valider.";
                     errorMessage.style.display = 'block';
                     return;
@@ -523,14 +581,16 @@
                 const comment = optionData.comment;
 
                 totalScore += score;
-                detailedComments.push(comment); // Collecte les commentaires pour le bilan
+                if (score > 0) { // Si le score est > 0, c'est une zone à améliorer
+                    problematicAreas.push(comment);
+                }
 
                 // Construction du HTML pour le récapitulatif
                 recapHTML += `
                     <div class="recap-question">
                         <p><strong>${i}. ${questionData.text}</strong></p>
                         <p>Ta réponse : ${optionData.label}</p>
-                        <p class="score-evaluation">Points pour cette réponse : ${score} - ${comment}</p>
+                        <p class="score-evaluation">Ton diagnostic sur cette réponse : ${comment}</p>
                     </div>
                 `;
             }
@@ -540,80 +600,46 @@
 
             // Déterminer le diagnostic introductif en fonction du score total
             let diagnosticIntroText = "";
-            let detailedBilanText = "<h3>Bilan détaillé et conseils :</h3>"; // Préparation du bilan détaillé
+            let detailedBilanText = "<h3>Bilan détaillé et pistes d'amélioration :</h3>";
 
             if (totalScore <= 5) {
-                diagnosticIntroText = "Félicitations ! Ton alimentation est globalement bien équilibrée et ne semble pas être un frein majeur à ta perte de poids. Tu as de très bonnes habitudes. Continue ainsi !";
-                detailedBilanText += "<p>Tes réponses montrent une excellente compréhension des bases d'une alimentation saine. Tu gères bien tes repas, ton sommeil et ton activité physique. Pour aller plus loin, assure-toi de maintenir cette cohérence et n'hésite pas à explorer de nouvelles recettes saines pour éviter la monotonie.</p>";
+                diagnosticIntroText = "Félicitations ! Ton alimentation et tes habitudes de vie sont globalement très bien alignées avec une perte de poids saine. Tu as de solides fondations !";
+                detailedBilanText += "<p>Tes réponses montrent une **excellente compréhension** des principes d'une alimentation saine et d'un mode de vie équilibré. Tu gères bien tes repas, ton sommeil et ton niveau d'activité physique. Pour maintenir ces acquis et continuer à progresser, la **cohérence** sera ta meilleure alliée. N'hésite pas à explorer de nouvelles recettes saines pour **éviter la monotonie** et garder le plaisir de manger sainement. Tu es sur la bonne voie !</p>";
             } else if (totalScore <= 15) {
-                diagnosticIntroText = "Tu es sur la bonne voie ! Quelques ajustements pourraient t'aider à optimiser ta perte de poids. Tes habitudes sont globalement bonnes, mais il y a des marges de progression intéressantes.";
-                detailedBilanText += "<p>Tes réponses révèlent quelques opportunités d'amélioration. Voici les points sur lesquels tu peux te concentrer pour débloquer ta perte de poids :</p><ul>";
-                detailedComments.forEach(comment => {
-                    if (comment !== "C'est une excellente habitude pour maintenir ton énergie et réguler l'appétit." &&
-                        comment !== "Parfait ! Un repas équilibré au déjeuner est la clé d'une bonne énergie et satiété." &&
-                        comment !== "Idéal ! Un sommeil suffisant est fondamental pour la régulation du poids." &&
-                        comment !== "Excellent choix ! Un dîner léger et équilibré favorise une bonne digestion nocturne." &&
-                        comment !== "Très bien ! Les éviter est un atout majeur pour la perte de poids." &&
-                        comment !== "Excellent ! Manger en pleine conscience est une habitude clé pour la perte de poids." &&
-                        comment !== "Le sentiment idéal ! Tes repas te fournissent ce dont tu as besoin." &&
-                        comment !== "Parfait ! Une bonne répartition des protéines est essentielle." &&
-                        comment !== "Très bien ! C'est un bon niveau d'activité quotidienne." &&
-                        comment !== "Fantastique ! L'activité physique est un pilier essentiel de la perte de poids.") {
-                            detailedBilanText += `<li>${comment}</li>`;
-                        }
+                diagnosticIntroText = "Tu es sur la **très bonne voie** ! Quelques ajustements ciblés peuvent t'aider à optimiser ta perte de poids. Tes habitudes sont globalement bonnes, mais il existe des **marges de progression intéressantes** qui feront une grande différence.";
+                detailedBilanText += "<p>Tes réponses révèlent des **opportunités d'amélioration spécifiques**. Voici les points sur lesquels tu peux te concentrer pour débloquer ta perte de poids :</p><ul>";
+                problematicAreas.forEach(comment => {
+                    detailedBilanText += `<li>${comment}</li>`;
                 });
-                detailedBilanText += "</ul><p>En travaillant sur ces aspects, tu verras rapidement des progrès. La cohérence est essentielle !</p>";
+                detailedBilanText += "</ul><p>En travaillant sur ces aspects, même par **petites étapes**, tu verras rapidement des progrès significatifs. La **régularité** et la **patience** sont essentielles !</p>";
             } else if (totalScore <= 25) {
-                diagnosticIntroText = "Ton alimentation présente plusieurs points qui pourraient freiner ta perte de poids. Mais la bonne nouvelle, c'est que tu as identifié les domaines clés à améliorer. De petits changements peuvent mener à de grands résultats !";
-                detailedBilanText += "<p>Il y a des habitudes qui pourraient impacter ta perte de poids. Concentre-toi sur les domaines suivants pour voir un réel changement :</p><ul>";
-                detailedComments.forEach(comment => {
-                     if (comment !== "C'est une excellente habitude pour maintenir ton énergie et réguler l'appétit." &&
-                        comment !== "Parfait ! Un repas équilibré au déjeuner est la clé d'une bonne énergie et satiété." &&
-                        comment !== "Idéal ! Un sommeil suffisant est fondamental pour la régulation du poids." &&
-                        comment !== "Excellent choix ! Un dîner léger et équilibré favorise une bonne digestion nocturne." &&
-                        comment !== "Très bien ! Les éviter est un atout majeur pour la perte de poids." &&
-                        comment !== "Excellent ! Manger en pleine conscience est une habitude clé pour la perte de poids." &&
-                        comment !== "Le sentiment idéal ! Tes repas te fournissent ce dont tu as besoin." &&
-                        comment !== "Parfait ! Une bonne répartition des protéines est essentielle." &&
-                        comment !== "Très bien ! C'est un bon niveau d'activité quotidienne." &&
-                        comment !== "Fantastique ! L'activité physique est un pilier essentiel de la perte de poids.") {
-                            detailedBilanText += `<li>${comment}</li>`;
-                        }
+                diagnosticIntroText = "Ton alimentation et tes habitudes de vie présentent **plusieurs points importants** qui pourraient freiner ta perte de poids. Ne t'inquiète pas, c'est le moment idéal pour **prendre conscience** et mettre en place des changements pour des résultats durables !";
+                detailedBilanText += "<p>Il y a des habitudes qui ont un **impact certain** sur ta capacité à perdre du poids. Concentre-toi sur les domaines suivants pour voir un réel changement :</p><ul>";
+                problematicAreas.forEach(comment => {
+                    detailedBilanText += `<li>${comment}</li>`;
                 });
-                detailedBilanText += "</ul><p>Commence par les deux ou trois points qui te semblent les plus faciles à modifier. Chaque petit pas compte !</p>";
+                detailedBilanText += "</ul><p>Commence par les **deux ou trois points** qui te semblent les plus faciles à modifier pour commencer à construire une dynamique positive. Chaque petit pas compte et te rapprochera de tes objectifs !</p>";
             } else {
-                diagnosticIntroText = "Il semblerait que tes habitudes alimentaires et ton mode de vie soient des obstacles significatifs à ta perte de poids. Ne te décourage pas ! Ce quiz est une prise de conscience importante. Le changement est à ta portée.";
-                detailedBilanText += "<p>Tes réponses suggèrent plusieurs défis importants qui peuvent bloquer ta perte de poids. Voici les domaines prioritaires sur lesquels travailler :</p><ul>";
-                detailedComments.forEach(comment => {
-                    if (comment !== "C'est une excellente habitude pour maintenir ton énergie et réguler l'appétit." &&
-                        comment !== "Parfait ! Un repas équilibré au déjeuner est la clé d'une bonne énergie et satiété." &&
-                        comment !== "Idéal ! Un sommeil suffisant est fondamental pour la régulation du poids." &&
-                        comment !== "Excellent choix ! Un dîner léger et équilibré favorise une bonne digestion nocturne." &&
-                        comment !== "Très bien ! Les éviter est un atout majeur pour la perte de poids." &&
-                        comment !== "Excellent ! Manger en pleine conscience est une habitude clé pour la perte de poids." &&
-                        comment !== "Le sentiment idéal ! Tes repas te fournissent ce dont tu as besoin." &&
-                        comment !== "Parfait ! Une bonne répartition des protéines est essentielle." &&
-                        comment !== "Très bien ! C'est un bon niveau d'activité quotidienne." &&
-                        comment !== "Fantastique ! L'activité physique est un pilier essentiel de la perte de poids.") {
-                            detailedBilanText += `<li>${comment}</li>`;
-                        }
+                diagnosticIntroText = "Il semblerait que tes habitudes actuelles soient un **obstacle significatif** à ta perte de poids. Mais la bonne nouvelle, c'est que tu as maintenant une **clarté totale** sur les domaines à améliorer. Le changement est à ta portée, et ce quiz est le premier pas vers une transformation !";
+                detailedBilanText += "<p>Tes réponses suggèrent plusieurs **défis importants** qui peuvent bloquer ta perte de poids. Voici les domaines **prioritaires** sur lesquels travailler pour une véritable transformation :</p><ul>";
+                problematicAreas.forEach(comment => {
+                    detailedBilanText += `<li>${comment}</li>`;
                 });
-                detailedBilanText += "</ul><p>Commence par un ou deux changements simples mais réguliers. L'important est de démarrer et de construire de nouvelles habitudes progressivement. Tu as le pouvoir de transformer ta santé !</p>";
+                detailedBilanText += "</ul><p>Commence par un ou deux **changements simples mais réguliers** qui te paraissent gérables. L'important est de démarrer et de construire de nouvelles habitudes progressivement. N'hésite pas à te faire accompagner pour ces changements profonds. **Tu as le pouvoir de transformer ta santé et d'atteindre tes objectifs !**</p>";
             }
 
             diagnosticIntroElement.textContent = diagnosticIntroText;
-            diagnosticTextElement.innerHTML = detailedBilanText; // Utiliser innerHTML pour le HTML généré
+            diagnosticTextElement.innerHTML = detailedBilanText;
 
-            resultatQuizDiv.style.display = 'block'; // Afficher le diagnostic
-            downloadSectionDiv.style.display = 'block'; // Afficher la section de téléchargement
+            resultatQuizDiv.style.display = 'block';
+            downloadSectionDiv.style.display = 'block';
 
-            // Cacher le formulaire de quiz une fois le diagnostic affiché
             document.getElementById('quizForm').style.display = 'none';
         }
 
         // Gestion du téléchargement du PDF
         document.getElementById('downloadPdfBtn').onclick = function() {
-            window.location.href = 'mon_plan_personnel.pdf'; // Assurez-vous que ce nom de fichier est exact
+            window.location.href = 'mon_plan_personnel.pdf';
         };
 
         // Initialisation : afficher la première question au chargement
