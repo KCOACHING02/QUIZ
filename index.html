@@ -4,116 +4,206 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz : Alimentation et Perte de Poids</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Styles CSS pour une présentation agréable */
+        /* Variables CSS pour faciliter les changements de thème */
+        :root {
+            --primary-color: #4CAF50; /* Vert frais */
+            --primary-dark: #388E3C;
+            --secondary-color: #2196F3; /* Bleu */
+            --background-light: #f9f9f9;
+            --text-color: #333;
+            --border-color: #ddd;
+            --shadow-light: rgba(0,0,0,0.08);
+            --success-color: #4CAF50;
+            --error-color: #F44336;
+            --warning-color: #FFC107;
+        }
+
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f8f8f8;
-            color: #333;
+            background-color: var(--background-light);
+            color: var(--text-color);
             line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
         }
         .container {
             background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            max-width: 800px;
-            margin: 30px auto;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px var(--shadow-light);
+            max-width: 700px;
+            width: 100%;
             text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.8s forwards ease-out;
         }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         h1 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-            font-size: 2em;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            font-size: 2.2em;
+            font-weight: 700;
         }
         .intro-text {
             font-size: 1.1em;
-            color: #555;
+            color: #666;
             margin-bottom: 30px;
         }
+
+        /* Styles pour les sections de quiz (questions) */
         .quiz-section {
             text-align: left;
-            margin-bottom: 25px;
-            padding: 15px;
-            border: 1px solid #eee;
-            border-radius: 8px;
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 10px;
             background-color: #fdfdfd;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease-in-out;
+            opacity: 0; /* Caché par défaut pour les étapes */
+            transform: translateX(20px); /* Pour l'animation slide-in */
+        }
+        .quiz-section.active {
+            opacity: 1;
+            transform: translateX(0);
+            position: relative; /* Pour le z-index en cas d'overlap */
         }
         .quiz-section p {
-            font-weight: bold;
-            color: #34495e;
-            margin-bottom: 15px;
-            font-size: 1.1em;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 18px;
+            font-size: 1.15em;
         }
         .quiz-section label {
-            display: block;
-            margin-bottom: 10px;
+            display: flex; /* Utilisation de flexbox pour aligner radio et texte */
+            align-items: center;
+            margin-bottom: 12px;
             cursor: pointer;
-            padding: 8px 0;
-            transition: background-color 0.2s ease;
-            border-radius: 4px;
+            padding: 12px 15px;
+            background-color: #f0f0f0;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            transition: all 0.3s ease;
         }
         .quiz-section label:hover {
-            background-color: #eef;
+            background-color: #e5e5e5;
+            border-color: var(--primary-color);
         }
         .quiz-section input[type="radio"] {
-            margin-right: 10px;
+            margin-right: 15px;
+            transform: scale(1.3); /* Agrandir le bouton radio */
+            accent-color: var(--primary-color); /* Couleur du radio button */
+        }
+        .quiz-section input[type="radio"]:checked + span { /* Style pour le texte de l'option sélectionnée */
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        .quiz-section input[type="radio"]:checked ~ label { /* Style pour la label quand le radio est checké */
+            background-color: #e6ffe6; /* Fond plus clair */
+            border-color: var(--primary-color); /* Bordure colorée */
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2); /* Ombre subtile */
+        }
+
+
+        /* Boutons de navigation */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
         }
         button {
-            background-color: #28a745; /* Vert pour le bouton principal */
+            background-color: var(--primary-color);
             color: white;
             padding: 12px 25px;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 1.1em;
-            margin-top: 30px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
         button:hover {
-            background-color: #218838;
+            background-color: var(--primary-dark);
             transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: translateY(0);
+            box-shadow: none;
+        }
+        #prevQuestionBtn {
+            background-color: #6c757d; /* Gris pour précédent */
+        }
+        #prevQuestionBtn:hover {
+            background-color: #5a6268;
+        }
+
+
+        /* Section du résultat et téléchargement */
         #resultatQuiz {
-            margin-top: 30px;
-            padding: 20px;
-            border-radius: 8px;
-            background-color: #e9ecef;
-            color: #333;
+            margin-top: 40px;
+            padding: 30px;
+            border-radius: 10px;
+            background-color: #e6ffe6; /* Fond léger pour le succès */
+            color: var(--text-color);
             font-size: 1.1em;
             text-align: left;
             display: none; /* Caché par défaut */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            animation: fadeIn 0.8s forwards;
         }
         #resultatQuiz h2 {
-            color: #007bff;
+            color: var(--primary-dark);
             margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+        #diagnosticText {
+            margin-bottom: 20px;
         }
         #downloadSection {
-            margin-top: 40px;
+            margin-top: 30px;
             padding: 25px;
-            background-color: #d1ecf1;
-            border: 1px solid #bee5eb;
-            border-radius: 8px;
+            background-color: #e0f2f7; /* Bleu clair pour le téléchargement */
+            border: 1px solid #b3e5fc;
+            border-radius: 10px;
             text-align: center;
             display: none; /* Caché par défaut */
+            animation: fadeIn 0.8s forwards;
         }
         #downloadSection h2 {
-            color: #0c5460;
+            color: var(--secondary-color);
             margin-bottom: 15px;
+            font-size: 1.6em;
         }
         #downloadPdfBtn {
-            background-color: #007bff; /* Bleu pour le bouton de téléchargement */
-            margin-top: 15px;
+            background-color: var(--secondary-color); /* Bouton bleu pour le PDF */
+            margin-top: 20px;
         }
         #downloadPdfBtn:hover {
-            background-color: #0056b3;
+            background-color: #1976D2;
         }
         .error-message {
-            color: red;
-            margin-top: 10px;
-            display: none; /* Caché par défaut */
+            color: var(--error-color);
+            margin-top: 15px;
+            font-weight: 600;
+            display: none;
         }
     </style>
 </head>
@@ -123,88 +213,93 @@
         <p class="intro-text">Réponds aux 10 questions suivantes pour recevoir ton diagnostic personnalisé (et débloquer ta perte de poids avec un plan offert à la fin).</p>
 
         <form id="quizForm">
-            <div class="quiz-section">
+            <div class="quiz-section active" data-question-id="1">
                 <p>1. Sautes-tu un repas dans la journée ?</p>
-                <label><input type="radio" name="q1" value="A"> A. Oui, souvent le petit-déj</label>
-                <label><input type="radio" name="q1" value="B"> B. Oui, souvent le déjeuner (midi)</label>
-                <label><input type="radio" name="q1" value="C"> C. Non, je mange 3 repas par jour</label>
-                <label><input type="radio" name="q1" value="D"> D. Je mange à des horaires irréguliers</label>
+                <label><input type="radio" name="q1" value="A"> <span>A. Oui, souvent le petit-déj</span></label>
+                <label><input type="radio" name="q1" value="B"> <span>B. Oui, souvent le déjeuner (midi)</span></label>
+                <label><input type="radio" name="q1" value="C"> <span>C. Non, je mange 3 repas par jour</span></label>
+                <label><input type="radio" name="q1" value="D"> <span>D. Je mange à des horaires irréguliers</span></label>
             </div>
 
-            <div class="quiz-section">
+            <div class="quiz-section" data-question-id="2">
                 <p>2. Le midi, tu manges plutôt :</p>
-                <label><input type="radio" name="q2" value="A"> A. Un plat tout prêt, ou sur le pouce</label>
-                <label><input type="radio" name="q2" value="B"> B. Un vrai repas complet et équilibré</label>
-                <label><input type="radio" name="q2" value="C"> C. Une salade ou une soupe légère</label>
-                <label><input type="radio" name="q2" value="D"> D. Je saute ce repas par manque de temps ou d’appétit</label>
+                <label><input type="radio" name="q2" value="A"> <span>A. Un plat tout prêt, ou sur le pouce</span></label>
+                <label><input type="radio" name="q2" value="B"> <span>B. Un vrai repas complet et équilibré</span></label>
+                <label><input type="radio" name="q2" value="C"> <span>C. Une salade ou une soupe légère</span></label>
+                <label><input type="radio" name="q2" value="D"> <span>D. Je saute ce repas par manque de temps ou d’appétit</span></label>
             </div>
 
-            <div class="quiz-section">
+            <div class="quiz-section" data-question-id="3">
                 <p>3. Ton sommeil : tu dors en moyenne…</p>
-                <label><input type="radio" name="q3" value="A"> A. Moins de 5h par nuit</label>
-                <label><input type="radio" name="q3" value="B"> B. Entre 5h et 6h</label>
-                <label><input type="radio" name="q3" value="C"> C. Entre 7h et 8h</label>
-                <label><input type="radio" name="q3" value="D"> D. 9h ou plus</label>
+                <label><input type="radio" name="q3" value="A"> <span>A. Moins de 5h par nuit</span></label>
+                <label><input type="radio" name="q3" value="B"> <span>B. Entre 5h et 6h</span></label>
+                <label><input type="radio" name="q3" value="C"> <span>C. Entre 7h et 8h</span></label>
+                <label><input type="radio" name="q3" value="D"> <span>D. 9h ou plus</span></label>
             </div>
 
-            <div class="quiz-section">
+            <div class="quiz-section" data-question-id="4">
                 <p>4. Ton dîner, c’est souvent :</p>
-                <label><input type="radio" name="q4" value="A"> A. Un plat plaisir (raclette, pizza, burger maison…)</label>
-                <label><input type="radio" name="q4" value="B"> B. Un repas équilibré (protéines, légumes, un peu de féculents)</label>
-                <label><input type="radio" name="q4" value="C"> C. Une soupe + yaourt ou fruit</label>
-                <label><input type="radio" name="q4" value="D"> D. Je mange devant la télé sans trop me rappeler quoi</label>
+                <label><input type="radio" name="q4" value="A"> <span>A. Un plat plaisir (raclette, pizza, burger maison…)</span></label>
+                <label><input type="radio" name="q4" value="B"> <span>B. Un repas équilibré (protéines, légumes, un peu de féculents)</span></label>
+                <label><input type="radio" name="q4" value="C"> <span>C. Une soupe + yaourt ou fruit</span></label>
+                <label><input type="radio" name="q4" value="D"> <span>D. Je mange devant la télé sans trop me rappeler quoi</span></label>
             </div>
 
-            <div class="quiz-section">
+            <div class="quiz-section" data-question-id="5">
                 <p>5. Combien de fois par semaine manges-tu des pizzas, burgers ou fast-food ?</p>
-                <label><input type="radio" name="q5" value="A"> A. 3 fois ou plus</label>
-                <label><input type="radio" name="q5" value="B"> B. 1 à 2 fois</label>
-                <label><input type="radio" name="q5" value="C"> C. Rarement, une fois de temps en temps</label>
-                <label><input type="radio" name="q5" value="D"> D. Jamais, j’évite complètement</label>
+                <label><input type="radio" name="q5" value="A"> <span>A. 3 fois ou plus</span></label>
+                <label><input type="radio" name="q5" value="B"> <span>B. 1 à 2 fois</span></label>
+                <label><input type="radio" name="q5" value="C"> <span>C. Rarement, une fois de temps en temps</span></label>
+                <label><input type="radio" name="q5" value="D"> <span>D. Jamais, j’évite complètement</span></label>
             </div>
 
-            <div class="quiz-section">
+            <div class="quiz-section" data-question-id="6">
                 <p>6. Manges-tu souvent devant un écran ?</p>
-                <label><input type="radio" name="q6" value="A"> A. Toujours devant la télé</label>
-                <label><input type="radio" name="q6" value="B"> B. Souvent devant mon téléphone</label>
-                <label><input type="radio" name="q6" value="C"> C. Parfois, mais j’essaie de faire attention</label>
-                <label><input type="radio" name="q6" value="D"> D. Non, je mange à table sans distraction</label>
+                <label><input type="radio" name="q6" value="A"> <span>A. Toujours devant la télé</span></label>
+                <label><input type="radio" name="q6" value="B"> <span>B. Souvent devant mon téléphone</span></label>
+                <label><input type="radio" name="q6" value="C"> <span>C. Parfois, mais j’essaie de faire attention</span></label>
+                <label><input type="radio" name="q6" value="D"> <span>D. Non, je mange à table sans distraction</span></label>
             </div>
 
-            <div class="quiz-section">
+            <div class="quiz-section" data-question-id="7">
                 <p>7. Après tes repas, tu te sens :</p>
-                <label><input type="radio" name="q7" value="A"> A. Fatiguée ou ballonnée</label>
-                <label><input type="radio" name="q7" value="B"> B. Encore un peu affamée</label>
-                <label><input type="radio" name="q7" value="C"> C. Satisfaite et rassasiée</label>
-                <label><input type="radio" name="q7" value="D"> D. Prête à grignoter ou chercher un dessert</label>
+                <label><input type="radio" name="q7" value="A"> <span>A. Fatiguée ou ballonnée</span></label>
+                <label><input type="radio" name="q7" value="B"> <span>B. Encore un peu affamée</span></label>
+                <label><input type="radio" name="q7" value="C"> <span>C. Satisfaite et rassasiée</span></label>
+                <label><input type="radio" name="q7" value="D"> <span>D. Prête à grignoter ou chercher un dessert</span></label>
             </div>
 
-            <div class="quiz-section">
+            <div class="quiz-section" data-question-id="8">
                 <p>8. Tes apports en protéines, tu dirais que…</p>
-                <label><input type="radio" name="q8" value="A"> A. J’en mange trop peu ou pas à chaque repas</label>
-                <label><input type="radio" name="q8" value="B"> B. Je n’ai aucune idée de combien il m’en faut</label>
-                <label><input type="radio" name="q8" value="C"> C. Je fais attention à en avoir à chaque repas (25–30g midi/soir)</label>
-                <label><input type="radio" name="q8" value="D"> D. Je suis végé/végan mais sans suivi précis</label>
+                <label><input type="radio" name="q8" value="A"> <span>A. J’en mange trop peu ou pas à chaque repas</span></label>
+                <label><input type="radio" name="q8" value="B"> <span>B. Je n’ai aucune idée de combien il m’en faut</span></label>
+                <label><input type="radio" name="q8" value="C"> <span>C. Je fais attention à en avoir à chaque repas (25–30g midi/soir)</span></label>
+                <label><input type="radio" name="q8" value="D"> <span>D. Je suis végé/végan mais sans suivi précis</span></label>
             </div>
 
-            <div class="quiz-section">
+            <div class="quiz-section" data-question-id="9">
                 <p>9. Dans tes repas principaux, il y a souvent des féculents ?</p>
-                <label><input type="radio" name="q9" value="A"> A. Dans les deux repas (pâtes, riz, pain…)</label>
-                <label><input type="radio" name="q9" value="B"> B. Au moins une fois par jour</label>
-                <label><input type="radio" name="q9" value="C"> C. Très peu, je privilégie légumes et protéines</label>
-                <label><input type="radio" name="q9" value="D"> D. Je ne fais pas attention</label>
+                <label><input type="radio" name="q9" value="A"> <span>A. Dans les deux repas (pâtes, riz, pain…)</span></label>
+                <label><input type="radio" name="q9" value="B"> <span>B. Au moins une fois par jour</span></label>
+                <label><input type="radio" name="q9" value="C"> <span>C. Très peu, je privilégie légumes et protéines</span></label>
+                <label><input type="radio" name="q9" value="D"> <span>D. Je ne fais pas attention</span></label>
             </div>
 
-            <div class="quiz-section">
+            <div class="quiz-section" data-question-id="10">
                 <p>10. Combien de pas fais-tu en moyenne chaque jour ?</p>
-                <label><input type="radio" name="q10" value="A"> A. Moins de 5000</label>
-                <label><input type="radio" name="q10" value="B"> B. Entre 5000 et 7000</label>
-                <label><input type="radio" name="q10" value="C"> C. Entre 7000 et 10 000</label>
-                <label><input type="radio" name="q10" value="D"> D. Plus de 10 000</label>
+                <label><input type="radio" name="q10" value="A"> <span>A. Moins de 5000</span></label>
+                <label><input type="radio" name="q10" value="B"> <span>B. Entre 5000 et 7000</span></label>
+                <label><input type="radio" name="q10" value="C"> <span>C. Entre 7000 et 10 000</span></label>
+                <label><input type="radio" name="q10" value="D"> <span>D. Plus de 10 000</span></label>
             </div>
 
-            <p class="error-message" id="errorMessage">Veuillez répondre à toutes les questions avant de valider.</p>
-            <button type="button" onclick="calculerDiagnostic()">Obtenir mon diagnostic</button>
+            <p class="error-message" id="errorMessage">Veuillez sélectionner une réponse pour continuer.</p>
+
+            <div class="navigation-buttons">
+                <button type="button" id="prevQuestionBtn" style="display: none;">Précédent</button>
+                <button type="button" id="nextQuestionBtn">Suivant</button>
+                <button type="button" id="submitQuizBtn" style="display: none;">Obtenir mon diagnostic</button>
+            </div>
         </form>
 
         <div id="resultatQuiz">
@@ -220,74 +315,124 @@
     </div>
 
     <script>
-        function calculerDiagnostic() {
-            const quizForm = document.getElementById('quizForm');
-            let score = 0;
-            const answers = {};
-            const questions = 10;
-            let allAnswered = true;
-            const errorMessage = document.getElementById('errorMessage');
+        const quizSections = document.querySelectorAll('.quiz-section');
+        const prevBtn = document.getElementById('prevQuestionBtn');
+        const nextBtn = document.getElementById('nextQuestionBtn');
+        const submitBtn = document.getElementById('submitQuizBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const resultatQuizDiv = document.getElementById('resultatQuiz');
+        const downloadSectionDiv = document.getElementById('downloadSection');
 
-            // Collecter les réponses et calculer le score
-            for (let i = 1; i <= questions; i++) {
-                const questionName = `q${i}`;
-                const selectedOption = document.querySelector(`input[name="${questionName}"]:checked`);
+        let currentQuestionIndex = 0;
+        const totalQuestions = quizSections.length;
 
-                if (!selectedOption) {
-                    allAnswered = false;
-                    break; // Arrêter si une question n'est pas répondue
-                }
-                answers[questionName] = selectedOption.value;
+        // Fonction pour afficher une question spécifique
+        function showQuestion(index) {
+            quizSections.forEach((section, idx) => {
+                section.classList.remove('active');
+                section.style.display = 'none'; // Cacher toutes les questions
+            });
+            quizSections[index].classList.add('active');
+            quizSections[index].style.display = 'block'; // Afficher la question active
 
-                // Logique de score (vous pouvez ajuster ces points)
-                switch(questionName) {
-                    case 'q1': // Sautes-tu un repas
-                        if (selectedOption.value === 'A' || selectedOption.value === 'B' || selectedOption.value === 'D') score += 2; // Mauvaise habitude
-                        break;
-                    case 'q2': // Midi
-                        if (selectedOption.value === 'A' || selectedOption.value === 'D') score += 3;
-                        if (selectedOption.value === 'C') score += 1;
-                        break;
-                    case 'q3': // Sommeil
-                        if (selectedOption.value === 'A' || selectedOption.value === 'B') score += 3;
-                        if (selectedOption.value === 'D') score += 1;
-                        break;
-                    case 'q4': // Dîner
-                        if (selectedOption.value === 'A' || selectedOption.value === 'D') score += 3;
-                        if (selectedOption.value === 'C') score += 1;
-                        break;
-                    case 'q5': // Fast-food
-                        if (selectedOption.value === 'A') score += 4;
-                        if (selectedOption.value === 'B') score += 2;
-                        break;
-                    case 'q6': // Écran en mangeant
-                        if (selectedOption.value === 'A' || selectedOption.value === 'B') score += 3;
-                        if (selectedOption.value === 'C') score += 1;
-                        break;
-                    case 'q7': // Après repas
-                        if (selectedOption.value === 'A' || selectedOption.value === 'B' || selectedOption.value === 'D') score += 2;
-                        break;
-                    case 'q8': // Protéines
-                        if (selectedOption.value === 'A' || selectedOption.value === 'B' || selectedOption.value === 'D') score += 2;
-                        break;
-                    case 'q9': // Féculents
-                        if (selectedOption.value === 'A' || selectedOption.value === 'D') score += 2;
-                        if (selectedOption.value === 'B') score += 1;
-                        break;
-                    case 'q10': // Pas par jour
-                        if (selectedOption.value === 'A' || selectedOption.value === 'B') score += 2;
-                        break;
-                }
-            }
+            // Mettre à jour la visibilité des boutons
+            prevBtn.style.display = index === 0 ? 'none' : 'block';
+            nextBtn.style.display = index === totalQuestions - 1 ? 'none' : 'block';
+            submitBtn.style.display = index === totalQuestions - 1 ? 'block' : 'none';
 
-            if (!allAnswered) {
-                errorMessage.style.display = 'block'; // Afficher le message d'erreur
-                document.getElementById('resultatQuiz').style.display = 'none';
-                document.getElementById('downloadSection').style.display = 'none';
+            errorMessage.style.display = 'none'; // Cacher le message d'erreur à chaque changement de question
+        }
+
+        // Gérer le bouton Suivant
+        nextBtn.addEventListener('click', () => {
+            const currentQuestionName = `q${currentQuestionIndex + 1}`;
+            const selectedOption = document.querySelector(`input[name="${currentQuestionName}"]:checked`);
+
+            if (!selectedOption) {
+                errorMessage.textContent = "Veuillez sélectionner une réponse pour continuer.";
+                errorMessage.style.display = 'block';
                 return;
-            } else {
-                errorMessage.style.display = 'none'; // Cacher le message d'erreur
             }
+
+            if (currentQuestionIndex < totalQuestions - 1) {
+                currentQuestionIndex++;
+                showQuestion(currentQuestionIndex);
+            }
+        });
+
+        // Gérer le bouton Précédent
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion(currentQuestionIndex);
+            }
+        });
+
+        // Gérer le bouton de soumission du quiz
+        submitBtn.addEventListener('click', () => {
+            const currentQuestionName = `q${currentQuestionIndex + 1}`;
+            const selectedOption = document.querySelector(`input[name="${currentQuestionName}"]:checked`);
+
+            if (!selectedOption) {
+                errorMessage.textContent = "Veuillez sélectionner une réponse pour valider le quiz.";
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            calculerDiagnostic();
+        });
+
+        // Fonction de calcul du diagnostic (presque la même que précédemment, avec quelques ajustements)
+        function calculerDiagnostic() {
+            let score = 0;
+            const questions = 10;
+            const allRadios = document.querySelectorAll('input[type="radio"]');
+
+            allRadios.forEach(radio => {
+                if (radio.checked) {
+                    const questionNumber = parseInt(radio.name.replace('q', ''));
+                    const answerValue = radio.value;
+
+                    switch(questionNumber) {
+                        case 1: // Sautes-tu un repas
+                            if (answerValue === 'A' || answerValue === 'B' || answerValue === 'D') score += 2;
+                            break;
+                        case 2: // Midi
+                            if (answerValue === 'A' || answerValue === 'D') score += 3;
+                            if (answerValue === 'C') score += 1;
+                            break;
+                        case 3: // Sommeil
+                            if (answerValue === 'A' || answerValue === 'B') score += 3;
+                            if (answerValue === 'D') score += 1;
+                            break;
+                        case 4: // Dîner
+                            if (answerValue === 'A' || answerValue === 'D') score += 3;
+                            if (answerValue === 'C') score += 1;
+                            break;
+                        case 5: // Fast-food
+                            if (answerValue === 'A') score += 4;
+                            if (answerValue === 'B') score += 2;
+                            break;
+                        case 6: // Écran en mangeant
+                            if (answerValue === 'A' || answerValue === 'B') score += 3;
+                            if (answerValue === 'C') score += 1;
+                            break;
+                        case 7: // Après repas
+                            if (answerValue === 'A' || answerValue === 'B' || answerValue === 'D') score += 2;
+                            break;
+                        case 8: // Protéines
+                            if (answerValue === 'A' || answerValue === 'B' || answerValue === 'D') score += 2;
+                            break;
+                        case 9: // Féculents
+                            if (answerValue === 'A' || answerValue === 'D') score += 2;
+                            if (answerValue === 'B') score += 1;
+                            break;
+                        case 10: // Pas par jour
+                            if (answerValue === 'A' || answerValue === 'B') score += 2;
+                            break;
+                    }
+                }
+            });
 
             // Déterminer le diagnostic en fonction du score
             let diagnosticText = "";
@@ -302,18 +447,21 @@
             }
 
             document.getElementById('diagnosticText').textContent = diagnosticText;
-            document.getElementById('resultatQuiz').style.display = 'block'; // Afficher le diagnostic
+            resultatQuizDiv.style.display = 'block'; // Afficher le diagnostic
+            downloadSectionDiv.style.display = 'block'; // Afficher la section de téléchargement
 
-            // Afficher la section de téléchargement après le diagnostic
-            document.getElementById('downloadSection').style.display = 'block';
+            // Cacher le formulaire de quiz une fois le diagnostic affiché
+            document.getElementById('quizForm').style.display = 'none';
         }
 
         // Gestion du téléchargement du PDF
         document.getElementById('downloadPdfBtn').onclick = function() {
-            // Important : remplacez 'ton_plan_personnalise.pdf' par le nom exact de votre fichier PDF
-            // Ce fichier PDF doit être dans le même dossier que votre fichier HTML.
-            window.location.href = 'mon_plan_personnel.pdf';
+            // IMPORTANT : Assurez-vous que ce chemin et ce nom de fichier sont EXACTS et que le PDF est bien sur votre GitHub.
+            window.location.href = 'ton_plan_personnalise.pdf';
         };
+
+        // Initialisation : afficher la première question au chargement
+        showQuestion(currentQuestionIndex);
     </script>
 </body>
 </html>
